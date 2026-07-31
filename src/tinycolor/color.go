@@ -414,6 +414,80 @@ func Mix(first, second Color, amount float64) Color {
 	}}
 }
 
+func (c Color) Complement() Color {
+	hsl := c.ToHSL()
+	return hslColor(math.Mod(hsl.H+180, 360), hsl.S, hsl.L, hsl.A, true)
+}
+
+func (c Color) SplitComplement() []Color {
+	hsl := c.ToHSL()
+	return []Color{
+		c,
+		hslColor(math.Mod(hsl.H+72, 360), hsl.S, hsl.L, 1, false),
+		hslColor(math.Mod(hsl.H+216, 360), hsl.S, hsl.L, 1, false),
+	}
+}
+
+func (c Color) Triad() []Color  { return c.polyad(3) }
+func (c Color) Tetrad() []Color { return c.polyad(4) }
+
+func (c Color) Analogous(results, slices int) []Color {
+	if results <= 0 || slices <= 0 {
+		return []Color{}
+	}
+	hsl := c.ToHSL()
+	part := 360 / float64(slices)
+	palette := []Color{c}
+	hue := math.Mod(hsl.H-float64(int(part*float64(results))>>1)+720, 360)
+	for remaining := results - 1; remaining > 0; remaining-- {
+		hue = math.Mod(hue+part, 360)
+		palette = append(palette, hslColor(hue, hsl.S, hsl.L, hsl.A, true))
+	}
+	return palette
+}
+
+func (c Color) Monochromatic(results int) []Color {
+	if results <= 0 {
+		return []Color{}
+	}
+	hsv := c.ToHSV()
+	palette := make([]Color, 0, results)
+	value := hsv.V
+	modification := 1 / float64(results)
+	for remaining := results; remaining > 0; remaining-- {
+		palette = append(palette, hsvColor(hsv.H, hsv.S, value))
+		value = math.Mod(value+modification, 1)
+	}
+	return palette
+}
+
+func (c Color) polyad(number int) []Color {
+	if number <= 0 {
+		return []Color{}
+	}
+	hsl := c.ToHSL()
+	palette := []Color{c}
+	step := 360 / float64(number)
+	for index := 1; index < number; index++ {
+		palette = append(palette, hslColor(math.Mod(hsl.H+float64(index)*step, 360), hsl.S, hsl.L, 1, false))
+	}
+	return palette
+}
+
+func hslColor(hue, saturation, lightness, alpha float64, includeAlpha bool) Color {
+	input := map[string]any{"h": hue, "s": saturation, "l": lightness}
+	if includeAlpha {
+		input["a"] = alpha
+	}
+	color, _ := FromCompat(input, false)
+	return color
+}
+
+func hsvColor(hue, saturation, value float64) Color {
+	color, _ := FromCompat(map[string]any{"h": hue, "s": saturation, "v": value}, false)
+	return color
+}
+
 func (c *Color) setHSL(h, s, l float64) {
 	c.model.R, c.model.G, c.model.B = hslToRGB(h, s, l)
 }
