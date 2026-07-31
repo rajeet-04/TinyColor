@@ -38,7 +38,7 @@ func handle(request compat.Request) compat.Response {
 		color, err = tinycolor.FromCompat(request.Input, false)
 	case "fromRatio":
 		color, err = tinycolor.FromCompat(request.Input, true)
-	case "output", "analysis", "clone", "modify", "mix":
+	case "output", "analysis", "clone", "modify", "mix", "readability", "isReadable", "mostReadable":
 		color, err = tinycolor.FromCompatWithOptions(request.Input, false, options(args))
 	case "equals", "randomInvariant":
 	default:
@@ -65,6 +65,12 @@ func handle(request compat.Request) compat.Response {
 		return modify(request.ID, &color, args)
 	case "mix":
 		return mix(request.ID, color, args)
+	case "readability":
+		return readability(request.ID, color, args)
+	case "isReadable":
+		return isReadable(request.ID, color, args)
+	case "mostReadable":
+		return mostReadable(request.ID, color, args)
 	case "equals":
 		response, _ := compat.Success(request.ID, tinycolor.Equals(request.Input, args["other"]))
 		return response
@@ -127,6 +133,34 @@ func mix(id string, first tinycolor.Color, args map[string]any) compat.Response 
 	return response
 }
 
+func readability(id string, first tinycolor.Color, args map[string]any) compat.Response {
+	second, _ := tinycolor.FromCompat(args["other"], false)
+	response, _ := compat.Success(id, tinycolor.Readability(first, second))
+	return response
+}
+
+func isReadable(id string, first tinycolor.Color, args map[string]any) compat.Response {
+	second, _ := tinycolor.FromCompat(args["other"], false)
+	response, _ := compat.Success(id, tinycolor.IsReadable(first, second, wcagOptions(args)))
+	return response
+}
+
+func mostReadable(id string, base tinycolor.Color, args map[string]any) compat.Response {
+	inputs, _ := args["candidates"].([]any)
+	candidates := make([]tinycolor.Color, 0, len(inputs))
+	for _, input := range inputs {
+		candidate, _ := tinycolor.FromCompat(input, false)
+		candidates = append(candidates, candidate)
+	}
+	result, ok := tinycolor.MostReadable(base, candidates, wcagOptions(args))
+	if !ok {
+		response, _ := compat.Success(id, nil)
+		return response
+	}
+	response, _ := compat.Success(id, result.Inspect())
+	return response
+}
+
 func defaultAmount(args map[string]any, fallback float64) float64 {
 	if value, ok := args["amount"]; ok {
 		amount := number(value)
@@ -148,6 +182,17 @@ func options(args map[string]any) tinycolor.CompatOptions {
 	format, _ := options["format"].(string)
 	gradientType, _ := options["gradientType"].(bool)
 	return tinycolor.CompatOptions{Format: format, GradientType: gradientType}
+}
+
+func wcagOptions(args map[string]any) tinycolor.WCAG2Options {
+	raw, _ := args["options"].(map[string]any)
+	level, _ := raw["level"].(string)
+	size, _ := raw["size"].(string)
+	return tinycolor.WCAG2Options{
+		Level:                 level,
+		Size:                  size,
+		IncludeFallbackColors: truthy(raw["includeFallbackColors"]),
+	}
 }
 
 func analysis(id string, color tinycolor.Color, method any) compat.Response {

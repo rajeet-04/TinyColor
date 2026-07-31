@@ -40,6 +40,14 @@ const handle = (request) => {
       return modify(request.id, color(), args);
     case "mix":
       return respond(request.id, inspect(tinycolor.mix(request.input, args.other, amount(args, 50))));
+    case "readability":
+      return respond(request.id, tinycolor.readability(request.input, args.other));
+    case "isReadable":
+      return respond(request.id, tinycolor.isReadable(request.input, args.other, args.options));
+    case "mostReadable": {
+      const result = tinycolor.mostReadable(request.input, args.candidates ?? [], args.options);
+      return respond(request.id, result ? inspect(result) : null);
+    }
     case "randomInvariant":
       return randomInvariant(request.id);
     default:
