@@ -12,8 +12,8 @@ Target: this checkout's `mod.js` and `test.js` from `bgrins/TinyColor`.
 | HEX/RGB/name parsing | Passing | `compat/cases/parser-hex-rgb.jsonl` | Source-derived HEX/RGB/name/object corpus. |
 | HSL/HSV parsing | Passing | `compat/cases/parser.jsonl` | Includes ratios, percentages, wrapping, and object precedence. |
 | Conversion/formatting | Passing | `compat/cases/conversion.jsonl` | 35 fixed JSONL cases; random is invariant-only. |
-| Analysis/readability | Planned | Wave 2–3 | Preserve WCAG defaults. |
-| Manipulation/palettes | Planned | Wave 3 | Preserve defaults and ordering. |
+| Analysis/readability | Passing | `compat/cases/operations.jsonl` | WCAG defaults, thresholds, ties, fallback, and null selection. |
+| Manipulation/palettes | Passing | `compat/cases/operations.jsonl` | 58 fixed operations cases cover modifiers, Mix, and ordered palettes. |
 | CLI/CI/benchmarks | Planned | Wave 4 | No result claimed yet. |
 | Original Deno suite | Blocked locally | `deno` unavailable | Run when Deno is installed or in CI. |
 
@@ -84,3 +84,11 @@ node compat/run.mjs compat/cases/conversion.jsonl
 Random-color behavior is verified by validity, alpha, and channel-range
 invariants only; it is not compared exactly across independent JavaScript and
 Go random generators.
+
+## Phase 4 operations result
+
+On 2026-08-01, the fixed operations corpus passed with **58/58 cases** and
+**0 mismatches**. The full available Phase 1-4 gate also retained **9/9**
+smoke, **26/26** HEX/RGB/name, **23/23** parser, and **35/35** conversion
+cases with zero mismatches. This evidence does not claim a Deno source-suite
+pass because Deno is unavailable locally.
