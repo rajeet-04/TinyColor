@@ -14,3 +14,6 @@
   26/26 HEX/RGB/name cases, 23/23 complete parser cases, and 9/9 smoke cases.
 - The Go module lives in `src/`; `tests/original/manifest.sha256` pins the
   unmodified root JavaScript oracle.
+- Phase 3 completed locally: conversion/representation and analysis behavior
+  passed a 35/35 exact corpus; all Phase 1–3 corpora are zero-mismatch. The
+  compatibility protocol now preserves successful JSON `false` results.

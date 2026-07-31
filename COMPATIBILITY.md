@@ -11,7 +11,7 @@ Target: this checkout's `mod.js` and `test.js` from `bgrins/TinyColor`.
 | Go adapter | Passing | `go test ./...` from `src/` | JSONL schema shared with Node adapter. |
 | HEX/RGB/name parsing | Passing | `compat/cases/parser-hex-rgb.jsonl` | Source-derived HEX/RGB/name/object corpus. |
 | HSL/HSV parsing | Passing | `compat/cases/parser.jsonl` | Includes ratios, percentages, wrapping, and object precedence. |
-| Conversion/formatting | Planned | Wave 2 | Exact strings and rounding. |
+| Conversion/formatting | Passing | `compat/cases/conversion.jsonl` | 35 fixed JSONL cases; random is invariant-only. |
 | Analysis/readability | Planned | Wave 2–3 | Preserve WCAG defaults. |
 | Manipulation/palettes | Planned | Wave 3 | Preserve defaults and ordering. |
 | CLI/CI/benchmarks | Planned | Wave 4 | No result claimed yet. |
@@ -64,3 +64,23 @@ Phase 2 Plan 02 work.
 `node compat/run.mjs compat/cases/parser.jsonl` passed with **23/23 cases** and
 **0 mismatches** on 2026-08-01. The unchanged Phase 1 smoke corpus also passed
 **9/9** with **0 mismatches**.
+
+## Phase 3 conversion result
+
+On 2026-08-01, the fixed conversion corpus passed with **35/35 cases** and
+**0 mismatches**. The complete Phase 1–3 gate also retained **9/9** smoke,
+**26/26** HEX/RGB/name, and **23/23** parser cases with zero mismatches:
+
+```powershell
+$env:GOCACHE = 'R:\Code\TinyColor\.cache\go-build'
+Set-Location src; go test ./...; go vet ./...; Set-Location ..
+node tests/port/adapter.test.mjs
+node compat/run.mjs compat/cases/smoke.jsonl
+node compat/run.mjs compat/cases/parser-hex-rgb.jsonl
+node compat/run.mjs compat/cases/parser.jsonl
+node compat/run.mjs compat/cases/conversion.jsonl
+```
+
+Random-color behavior is verified by validity, alpha, and channel-range
+invariants only; it is not compared exactly across independent JavaScript and
+Go random generators.

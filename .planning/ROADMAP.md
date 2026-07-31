@@ -9,8 +9,8 @@ through parsing and observable output, to operations and delivery proof.
 ## Phases
 
 - [x] **Phase 1: Foundation and Oracle** - Establish the Go module and a reproducible Node-to-Go differential baseline.
-- [ ] **Phase 2: Parsing and Color State** - Match accepted inputs and normalized TinyColor state.
-- [ ] **Phase 3: Conversion and Representation** - Match conversion, output, and analysis behavior.
+- [x] **Phase 2: Parsing and Color State** - Match accepted inputs and normalized TinyColor state.
+- [x] **Phase 3: Conversion and Representation** - Match conversion, output, and analysis behavior.
 - [ ] **Phase 4: Operations and Palettes** - Match manipulation, readability, and color-combination behavior.
 - [ ] **Phase 5: Delivery Evidence** - Ship the CLI, CI, benchmarks, and submission documentation.
 
@@ -51,7 +51,11 @@ Plans:
   1. RGB, percentage RGB, HSL, HSV, hex, hex8, name, filter, and generic string outputs match exactly.
   2. Brightness, luminance, equality, cloning, and random behavior have documented parity cases.
   3. No undocumented floating-point tolerance masks an observable mismatch.
-**Plans**: TBD
+**Plans**: 2 plans (complete 2026-08-01)
+
+Plans:
+- [x] 03-01-PLAN.md — Implement B's source-equivalent conversion, representation, and analysis facade.
+- [x] 03-02-PLAN.md — Add C's JSONL dispatch, differential corpus, and compatibility evidence.
 
 ### Phase 4: Operations and Palettes
 **Goal**: Go matches TinyColor's stateful modifiers, static utilities, readability checks, and palette ordering.
@@ -79,6 +83,6 @@ Plans:
 |---|---|---|---|
 | 1. Foundation and Oracle | 1/1 | Complete | 2026-08-01 |
 | 2. Parsing and Color State | 2/2 | Complete | 2026-08-01 |
-| 3. Conversion and Representation | 0/TBD | Not started | - |
+| 3. Conversion and Representation | 2/2 | Complete | 2026-08-01 |
 | 4. Operations and Palettes | 0/TBD | Not started | - |
 | 5. Delivery Evidence | 0/TBD | Not started | - |
