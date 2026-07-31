@@ -38,7 +38,7 @@ func handle(request compat.Request) compat.Response {
 		color, err = tinycolor.FromCompat(request.Input, false)
 	case "fromRatio":
 		color, err = tinycolor.FromCompat(request.Input, true)
-	case "output", "analysis", "clone", "modify", "mix", "readability", "isReadable", "mostReadable":
+	case "output", "analysis", "clone", "modify", "mix", "readability", "isReadable", "mostReadable", "palette":
 		color, err = tinycolor.FromCompatWithOptions(request.Input, false, options(args))
 	case "equals", "randomInvariant":
 	default:
@@ -71,6 +71,8 @@ func handle(request compat.Request) compat.Response {
 		return isReadable(request.ID, color, args)
 	case "mostReadable":
 		return mostReadable(request.ID, color, args)
+	case "palette":
+		return palette(request.ID, color, args)
 	case "equals":
 		response, _ := compat.Success(request.ID, tinycolor.Equals(request.Input, args["other"]))
 		return response
@@ -161,6 +163,34 @@ func mostReadable(id string, base tinycolor.Color, args map[string]any) compat.R
 	return response
 }
 
+func palette(id string, color tinycolor.Color, args map[string]any) compat.Response {
+	method, _ := args["method"].(string)
+	var colors []tinycolor.Color
+	switch method {
+	case "complement":
+		colors = []tinycolor.Color{color.Complement()}
+	case "splitcomplement":
+		colors = color.SplitComplement()
+	case "triad":
+		colors = color.Triad()
+	case "tetrad":
+		colors = color.Tetrad()
+	case "analogous":
+		colors = color.Analogous(defaultCount(args["results"], 6), defaultCount(args["slices"], 30))
+	case "monochromatic":
+		colors = color.Monochromatic(defaultCount(args["results"], 6))
+	default:
+		response, _ := compat.Failure(id, "unsupported method")
+		return response
+	}
+	inspections := make([]map[string]any, len(colors))
+	for index, paletteColor := range colors {
+		inspections[index] = paletteColor.Inspect()
+	}
+	response, _ := compat.Success(id, inspections)
+	return response
+}
+
 func defaultAmount(args map[string]any, fallback float64) float64 {
 	if value, ok := args["amount"]; ok {
 		amount := number(value)
@@ -170,6 +200,13 @@ func defaultAmount(args map[string]any, fallback float64) float64 {
 		return amount
 	}
 	return fallback
+}
+
+func defaultCount(value any, fallback int) int {
+	if !truthy(value) {
+		return fallback
+	}
+	return int(number(value))
 }
 
 func number(value any) float64 {
