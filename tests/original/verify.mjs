@@ -1,0 +1,28 @@
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+
+const digest = (file) => createHash("sha256").update(readFileSync(file)).digest("hex");
+
+export function verifyManifest(manifestPath, root) {
+  return readFileSync(manifestPath, "utf8").split(/\r?\n/).filter(Boolean).flatMap((line) => {
+    const [, expected, file] = line.match(/^(\S+)\s{2}(.+)$/) ?? [];
+    const path = resolve(root, file);
+    try {
+      return digest(path) === expected ? [] : [`mismatch: ${file}`];
+    } catch {
+      return [`missing: ${file}`];
+    }
+  });
+}
+
+if (import.meta.main) {
+  const manifest = resolve("tests/original/manifest.sha256");
+  const failures = verifyManifest(manifest, process.cwd());
+  if (failures.length) {
+    console.error(failures.join("\n"));
+    process.exitCode = 1;
+  } else {
+    console.log(`verified: ${readFileSync(manifest, "utf8").split(/\r?\n/).filter(Boolean).length}`);
+  }
+}
