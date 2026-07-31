@@ -11,7 +11,7 @@ through parsing and observable output, to operations and delivery proof.
 - [x] **Phase 1: Foundation and Oracle** - Establish the Go module and a reproducible Node-to-Go differential baseline.
 - [x] **Phase 2: Parsing and Color State** - Match accepted inputs and normalized TinyColor state.
 - [x] **Phase 3: Conversion and Representation** - Match conversion, output, and analysis behavior.
-- [ ] **Phase 4: Operations and Palettes** - Match manipulation, readability, and color-combination behavior.
+- [x] **Phase 4: Operations and Palettes** - Match manipulation, readability, and color-combination behavior.
 - [ ] **Phase 5: Delivery Evidence** - Ship the CLI, CI, benchmarks, and submission documentation.
 
 ## Phase Details
@@ -65,7 +65,10 @@ Plans:
   1. Modifiers preserve default, zero, clamping, wrapping, alpha, and mutation behavior.
   2. Readability and most-readable operations match WCAG option defaults.
   3. Every palette operation returns source-equivalent colors in source order.
-**Plans**: TBD
+**Plans**: 6 plans (complete 2026-08-01)
+
+Plans:
+- [x] 04-01 through 04-06: Typed operations, WCAG readability, palettes, compatibility dispatch, and differential evidence.
 
 ### Phase 5: Delivery Evidence
 **Goal**: A judge can clone the project, verify parity evidence, use a Go CLI, and understand the migration and its limitations.
@@ -84,5 +87,5 @@ Plans:
 | 1. Foundation and Oracle | 1/1 | Complete | 2026-08-01 |
 | 2. Parsing and Color State | 2/2 | Complete | 2026-08-01 |
 | 3. Conversion and Representation | 2/2 | Complete | 2026-08-01 |
-| 4. Operations and Palettes | 0/TBD | Not started | - |
+| 4. Operations and Palettes | 6/6 | Complete | 2026-08-01 |
 | 5. Delivery Evidence | 0/TBD | Not started | - |
