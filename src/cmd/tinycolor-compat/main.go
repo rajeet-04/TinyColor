@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"math"
 	"os"
+	"strconv"
+	"strings"
 
 	"github.com/rajeet-04/tinycolor-go/internal/compat"
 	"github.com/rajeet-04/tinycolor-go/tinycolor"
@@ -193,11 +195,12 @@ func palette(id string, color tinycolor.Color, args map[string]any) compat.Respo
 
 func defaultAmount(args map[string]any, fallback float64) float64 {
 	if value, ok := args["amount"]; ok {
-		amount := number(value)
-		if amount == 0 {
+		if amount, ok := value.(float64); ok && amount == 0 {
 			return 0
 		}
-		return amount
+		if truthy(value) {
+			return number(value)
+		}
 	}
 	return fallback
 }
@@ -210,8 +213,27 @@ func defaultCount(value any, fallback int) int {
 }
 
 func number(value any) float64 {
-	amount, _ := value.(float64)
-	return amount
+	switch value := value.(type) {
+	case float64:
+		return value
+	case bool:
+		if value {
+			return 1
+		}
+		return 0
+	case nil:
+		return 0
+	case string:
+		value = strings.TrimSpace(value)
+		if value == "" {
+			return 0
+		}
+		amount, err := strconv.ParseFloat(value, 64)
+		if err == nil {
+			return amount
+		}
+	}
+	return math.NaN()
 }
 
 func options(args map[string]any) tinycolor.CompatOptions {

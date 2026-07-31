@@ -24,8 +24,14 @@
 {"id":"mod-spin-over-360","operation":"modify","input":"#ff0000","args":{"method":"spin","amount":480},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
 {"id":"mod-spin-omitted","operation":"modify","input":"#ff0000","args":{"method":"spin"},"owner":"C-mrashis","suspectedPackage":"compat"}
 {"id":"mod-spin-null","operation":"modify","input":"#ff0000","args":{"method":"spin","amount":null},"owner":"C-mrashis","suspectedPackage":"compat"}
+{"id":"mod-lighten-null-default","operation":"modify","input":"#804020","args":{"method":"lighten","amount":null},"owner":"C-mrashis","suspectedPackage":"compat"}
+{"id":"mod-lighten-false-default","operation":"modify","input":"#804020","args":{"method":"lighten","amount":false},"owner":"C-mrashis","suspectedPackage":"compat"}
+{"id":"mod-lighten-string-number","operation":"modify","input":"#804020","args":{"method":"lighten","amount":"20"},"owner":"C-mrashis","suspectedPackage":"compat"}
 {"id":"mix-default","operation":"mix","input":"#ff0000","args":{"other":"#000000"},"owner":"C-mrashis","suspectedPackage":"compat"}
 {"id":"mix-zero","operation":"mix","input":"#ff0000","args":{"other":"#000000","amount":0},"owner":"C-mrashis","suspectedPackage":"compat"}
+{"id":"mix-null-default","operation":"mix","input":"#ff0000","args":{"other":"#000000","amount":null},"owner":"C-mrashis","suspectedPackage":"compat"}
+{"id":"mix-false-default","operation":"mix","input":"#ff0000","args":{"other":"#000000","amount":false},"owner":"C-mrashis","suspectedPackage":"compat"}
+{"id":"mix-string-number","operation":"mix","input":"#ff0000","args":{"other":"#000000","amount":"20"},"owner":"C-mrashis","suspectedPackage":"compat"}
 {"id":"mix-ninety","operation":"mix","input":"#ff0000","args":{"other":"#000000","amount":90},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
 {"id":"mix-transparent-alpha","operation":"mix","input":"transparent","args":{"other":"#00000080","amount":25},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
 {"id":"mix-out-of-range-high","operation":"mix","input":"#ff0000","args":{"other":"#000000","amount":150},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
