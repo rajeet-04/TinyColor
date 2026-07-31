@@ -187,18 +187,20 @@ func IsReadable(first, second Color, options WCAG2Options) bool {
 	return isReadableRatio(Readability(first, second), options)
 }
 func MostReadable(base Color, candidates []Color, options WCAG2Options) (Color, bool) {
-	if len(candidates) == 0 {
-		return Color{}, false
+	bestColor, hasBest := Color{}, len(candidates) != 0
+	if hasBest {
+		bestColor = candidates[0]
+	} else {
+		bestColor, _ = FromCompat(nil, false)
 	}
-	bestColor := candidates[0]
 	bestScore := Readability(base, bestColor)
-	for _, candidate := range candidates[1:] {
+	for _, candidate := range candidates {
 		if score := Readability(base, candidate); score > bestScore {
 			bestScore, bestColor = score, candidate
 		}
 	}
 	if IsReadable(base, bestColor, options) || !options.IncludeFallbackColors {
-		return bestColor, true
+		return bestColor, hasBest
 	}
 	white, _ := FromCompat("#fff", false)
 	black, _ := FromCompat("#000", false)

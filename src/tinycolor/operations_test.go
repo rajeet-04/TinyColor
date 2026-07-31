@@ -170,8 +170,13 @@ func TestMostReadable(t *testing.T) {
 	if _, ok := MostReadable(base, nil, WCAG2Options{}); ok {
 		t.Fatal("empty candidates without fallback must have no result")
 	}
-	if _, ok := MostReadable(base, nil, WCAG2Options{IncludeFallbackColors: true}); ok {
-		t.Fatal("empty candidates with fallback must have no result")
+	whiteBase, _ := FromCompat("#fff", false)
+	if _, ok := MostReadable(whiteBase, nil, WCAG2Options{IncludeFallbackColors: true}); ok {
+		t.Fatal("readable null candidate must remain no result")
+	}
+	darkBase, _ := FromCompat("#123", false)
+	if got, ok := MostReadable(darkBase, nil, WCAG2Options{IncludeFallbackColors: true}); !ok || got.ToHexString() != "#ffffff" {
+		t.Fatalf("empty candidates fallback = %#v, %t", got, ok)
 	}
 }
 
