@@ -70,3 +70,21 @@ assert.deepEqual(mixed, {
   },
 });
 assert.deepEqual(badModifier, { id: "bad-modifier", error: "unsupported method" });
+
+const [readability, readableDefault, readableMixedCase, readableInvalid, fallback, fallbackDisabled, emptyCandidates] = run([
+  '{"id":"readability","operation":"readability","input":"#000","args":{"other":"#fff"}}',
+  '{"id":"readable-default","operation":"isReadable","input":"#777","args":{"other":"#000","options":{}}}',
+  '{"id":"readable-mixed","operation":"isReadable","input":"#000","args":{"other":"#fff","options":{"level":"aaa","size":"LARGE"}}}',
+  '{"id":"readable-invalid","operation":"isReadable","input":"#777","args":{"other":"#000","options":{"level":false,"size":0}}}',
+  '{"id":"fallback","operation":"mostReadable","input":"#777","args":{"candidates":["#777"],"options":{"includeFallbackColors":true}}}',
+  '{"id":"fallback-disabled","operation":"mostReadable","input":"#777","args":{"candidates":["#777"],"options":{"includeFallbackColors":false}}}',
+  '{"id":"empty-candidates","operation":"mostReadable","input":"#fff","args":{"candidates":[],"options":{"includeFallbackColors":true}}}',
+].join("\n"));
+
+assert.equal(readability.result, 21);
+assert.equal(readableDefault.result, true);
+assert.equal(readableMixedCase.result, true);
+assert.equal(readableInvalid.result, true);
+assert.equal(fallback.result.value, "#000000");
+assert.equal(fallbackDisabled.result.value, "#777777");
+assert.equal(emptyCandidates.result, null);
