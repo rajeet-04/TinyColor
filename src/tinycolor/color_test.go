@@ -2,6 +2,32 @@ package tinycolor
 
 import "testing"
 
+func TestOutputsAndAnalysis(t *testing.T) {
+	c,_:=FromCompat("rgba(255, 0, 0, .5)",false)
+	if c.ToHex8String()!="#ff000080" || c.ToRGBString()!="rgba(255, 0, 0, 0.5)" { t.Fatal(c.ToHex8String(),c.ToRGBString()) }
+	if c.ToFilter(nil,false)!="progid:DXImageTransform.Microsoft.gradient(startColorstr=#80ff0000,endColorstr=#80ff0000)" {t.Fatal(c.ToFilter(nil,false))}
+	black,_:=FromCompat("#000",false); white,_:=FromCompat("#fff",false)
+	if black.Brightness()!=0||white.Luminance()!=1||!black.IsDark()||!white.IsLight(){t.Fatal("analysis")}
+	if !Equals("#ff000066","rgba(255, 0, 0, .4)"){t.Fatal("equals")}
+	if !Random().Valid(){t.Fatal("random")}
+}
+
+func TestStringHexFilterAndConversion(t *testing.T) {
+	c,_:=FromCompat("rgba(255, 0, 0, .5)",false)
+	if c.ToPercentageRGBString()!="rgba(100%, 0%, 0%, 0.5)"||c.ToHSLString()!="hsla(0, 100%, 50%, 0.5)"||c.ToHSVString()!="hsva(0, 100%, 100%, 0.5)"{t.Fatal("strings")}
+	if c.ToString("hex8")!="#ff000080"||c.ToString("name")!="#ff0000"{t.Fatal(c.ToString("hex8"),c.ToString("name"))}
+	with,_:=FromCompatWithOptions("red",false,CompatOptions{GradientType:true})
+	if with.ToFilter(nil,false)!="progid:DXImageTransform.Microsoft.gradient(GradientType = 1, startColorstr=#ffff0000,endColorstr=#ffff0000)"{t.Fatal(with.ToFilter(nil,false))}
+}
+
+func TestImplicitAlphaHexFallsBackToRGBA(t *testing.T) {
+	for _, input := range []string{"#f008", "#ff000080"} {
+		c, _ := FromCompat(input, false)
+		if c.String() != c.ToRGBString() { t.Fatalf("%s: %s", input, c.String()) }
+		if c.ToString("hex8") != c.ToHex8String() { t.Fatal("explicit hex8") }
+	}
+}
+
 func TestPhaseOneInputsMatchTinyColor(t *testing.T) {
 	tests := []struct {
 		name   string
