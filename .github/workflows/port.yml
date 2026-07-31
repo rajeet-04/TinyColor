@@ -22,7 +22,7 @@ jobs:
         with:
           deno-version: v2.x
       - run: make verify
-      - run: deno task test
+      - run: deno test test.js
       - run: make build
       - uses: actions/upload-artifact@v4
         with:
