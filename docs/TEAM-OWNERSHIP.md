@@ -1,23 +1,23 @@
 # Team Ownership and Handoffs
 
-## A — Model and parser lead
+## A — Model and parser lead @rajeet-04
 
 Owns normalized color data, inputs, low-level bounds, format metadata, named
 colors, and string/object parsing. Delivers parser fixtures and a documented
 package contract before B depends on it.
 
-## B — Conversion and behavior lead
+## B — Conversion and behavior lead @xthxr
 
 Owns conversion, formatting, instance/static operations, readability, and
 palettes. Consumes A's parsed color contract; does not change it unilaterally.
 
-## C — Equivalence and quality lead
+## C — Equivalence and quality lead @mrashis
 
 Owns the Node and Go adapters, case schema, differential driver, seeded corpus,
 regressions, and compatibility matrix. C can block a merge on unexplained
 behavioral divergence.
 
-## D — Integration and delivery lead
+## D — Integration and delivery lead @deepali
 
 Owns module setup, CLI, CI, benchmarks, README integration, demo instructions,
 and release hygiene. D does not declare parity from a benchmark or unit test;
