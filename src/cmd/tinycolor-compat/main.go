@@ -145,7 +145,12 @@ func readability(id string, first tinycolor.Color, args map[string]any) compat.R
 
 func isReadable(id string, first tinycolor.Color, args map[string]any) compat.Response {
 	second, _ := tinycolor.FromCompat(args["other"], false)
-	response, _ := compat.Success(id, tinycolor.IsReadable(first, second, wcagOptions(args)))
+	options, err := wcagOptions(args)
+	if err != nil {
+		response, _ := compat.Failure("", err.Error())
+		return response
+	}
+	response, _ := compat.Success(id, tinycolor.IsReadable(first, second, options))
 	return response
 }
 
@@ -156,7 +161,12 @@ func mostReadable(id string, base tinycolor.Color, args map[string]any) compat.R
 		candidate, _ := tinycolor.FromCompat(input, false)
 		candidates = append(candidates, candidate)
 	}
-	result, ok := tinycolor.MostReadable(base, candidates, wcagOptions(args))
+	options, err := wcagOptions(args)
+	if err != nil {
+		response, _ := compat.Failure("", err.Error())
+		return response
+	}
+	result, ok := tinycolor.MostReadable(base, candidates, options)
 	if !ok {
 		response, _ := compat.Success(id, nil)
 		return response
@@ -243,15 +253,26 @@ func options(args map[string]any) tinycolor.CompatOptions {
 	return tinycolor.CompatOptions{Format: format, GradientType: gradientType}
 }
 
-func wcagOptions(args map[string]any) tinycolor.WCAG2Options {
+func wcagOptions(args map[string]any) (tinycolor.WCAG2Options, error) {
 	raw, _ := args["options"].(map[string]any)
-	level, _ := raw["level"].(string)
-	size, _ := raw["size"].(string)
+	level, size := "", ""
+	if value := raw["level"]; truthy(value) {
+		var ok bool
+		if level, ok = value.(string); !ok {
+			return tinycolor.WCAG2Options{}, fmt.Errorf("(parms.level || \"AA\").toUpperCase is not a function")
+		}
+	}
+	if value := raw["size"]; truthy(value) {
+		var ok bool
+		if size, ok = value.(string); !ok {
+			return tinycolor.WCAG2Options{}, fmt.Errorf("(parms.size || \"small\").toLowerCase is not a function")
+		}
+	}
 	return tinycolor.WCAG2Options{
 		Level:                 level,
 		Size:                  size,
 		IncludeFallbackColors: truthy(raw["includeFallbackColors"]),
-	}
+	}, nil
 }
 
 func analysis(id string, color tinycolor.Color, method any) compat.Response {
