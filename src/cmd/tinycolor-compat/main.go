@@ -2,7 +2,10 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
+	"flag"
 	"fmt"
+	"io"
 	"math"
 	"os"
 	"strconv"
@@ -13,7 +16,32 @@ import (
 )
 
 func main() {
-	scanner := bufio.NewScanner(os.Stdin)
+	os.Exit(run(os.Args[1:], os.Stdin, os.Stdout, os.Stderr))
+}
+
+func run(args []string, stdin io.Reader, stdout, stderr io.Writer) int {
+	if len(args) == 0 {
+		return runJSONL(stdin, stdout, stderr)
+	}
+	switch args[0] {
+	case "parse":
+		return runParse(args[1:], stdout, stderr)
+	case "convert":
+		return runConvert(args[1:], stdout, stderr)
+	case "lighten":
+		return runLighten(args[1:], stdout, stderr)
+	case "palette":
+		return runPalette(args[1:], stdout, stderr)
+	case "contrast":
+		return runContrast(args[1:], stdout, stderr)
+	default:
+		usage(stderr, "")
+		return 2
+	}
+}
+
+func runJSONL(stdin io.Reader, stdout, stderr io.Writer) int {
+	scanner := bufio.NewScanner(stdin)
 	for scanner.Scan() {
 		line := scanner.Bytes()
 		if len(line) == 0 {
@@ -22,11 +50,168 @@ func main() {
 		request, err := compat.Decode(line)
 		if err != nil {
 			response, _ := compat.Failure("", err.Error())
-			write(response)
+			write(response, stdout, stderr)
 			continue
 		}
-		write(handle(request))
+		write(handle(request), stdout, stderr)
 	}
+	return 0
+}
+
+func runParse(args []string, stdout, stderr io.Writer) int {
+	flags := flag.NewFlagSet("parse", flag.ContinueOnError)
+	flags.SetOutput(stderr)
+	jsonOutput := flags.Bool("json", false, "output JSON")
+	if flags.Parse(args) != nil || flags.NArg() != 1 {
+		usage(stderr, "parse [--json] <color>")
+		return 2
+	}
+	color, _ := tinycolor.FromCompat(flags.Arg(0), false)
+	if *jsonOutput {
+		inspection := color.Inspect()
+		inspection["hex"] = color.ToHex()
+		return writeJSON(stdout, inspection)
+	}
+	fmt.Fprintln(stdout, color.String())
+	return 0
+}
+
+func runConvert(args []string, stdout, stderr io.Writer) int {
+	flags := flag.NewFlagSet("convert", flag.ContinueOnError)
+	flags.SetOutput(stderr)
+	to := flags.String("to", "", "hex, hex8, rgb, percentage-rgb, hsl, hsv, or name")
+	jsonOutput := flags.Bool("json", false, "output JSON")
+	if flags.Parse(args) != nil || flags.NArg() != 1 || *to == "" {
+		usage(stderr, "convert --to hex|hex8|rgb|percentage-rgb|hsl|hsv|name [--json] <color>")
+		return 2
+	}
+	color, _ := tinycolor.FromCompat(flags.Arg(0), false)
+	var result string
+	switch *to {
+	case "hex":
+		result = color.ToHexString()
+	case "hex8":
+		result = color.ToHex8String()
+	case "rgb":
+		result = color.ToRGBString()
+	case "percentage-rgb":
+		result = color.ToPercentageRGBString()
+	case "hsl":
+		result = color.ToHSLString()
+	case "hsv":
+		result = color.ToHSVString()
+	case "name":
+		result = color.ToString("name")
+	default:
+		usage(stderr, "convert --to hex|hex8|rgb|percentage-rgb|hsl|hsv|name [--json] <color>")
+		return 2
+	}
+	if *jsonOutput {
+		return writeJSON(stdout, result)
+	}
+	fmt.Fprintln(stdout, result)
+	return 0
+}
+
+func runLighten(args []string, stdout, stderr io.Writer) int {
+	flags := flag.NewFlagSet("lighten", flag.ContinueOnError)
+	flags.SetOutput(stderr)
+	amount := flags.Float64("amount", 10, "lightness percentage")
+	jsonOutput := flags.Bool("json", false, "output JSON")
+	if flags.Parse(args) != nil || flags.NArg() != 1 {
+		usage(stderr, "lighten [--amount 10] [--json] <color>")
+		return 2
+	}
+	color, _ := tinycolor.FromCompat(flags.Arg(0), false)
+	color.Lighten(*amount)
+	result := color.ToHexString()
+	if *jsonOutput {
+		return writeJSON(stdout, result)
+	}
+	fmt.Fprintln(stdout, result)
+	return 0
+}
+
+func runPalette(args []string, stdout, stderr io.Writer) int {
+	flags := flag.NewFlagSet("palette", flag.ContinueOnError)
+	flags.SetOutput(stderr)
+	kind := flags.String("type", "", "palette type")
+	results := flags.Int("results", 6, "number of colors")
+	slices := flags.Int("slices", 30, "number of hue slices")
+	jsonOutput := flags.Bool("json", false, "output JSON")
+	if flags.Parse(args) != nil || flags.NArg() != 1 || *kind == "" {
+		usage(stderr, "palette --type complement|splitcomplement|triad|tetrad|analogous|monochromatic [--results 6] [--slices 30] [--json] <color>")
+		return 2
+	}
+	color, _ := tinycolor.FromCompat(flags.Arg(0), false)
+	var colors []tinycolor.Color
+	switch *kind {
+	case "complement":
+		colors = []tinycolor.Color{color.Complement()}
+	case "splitcomplement":
+		colors = color.SplitComplement()
+	case "triad":
+		colors = color.Triad()
+	case "tetrad":
+		colors = color.Tetrad()
+	case "analogous":
+		colors = color.Analogous(*results, *slices)
+	case "monochromatic":
+		colors = color.Monochromatic(*results)
+	default:
+		usage(stderr, "palette --type complement|splitcomplement|triad|tetrad|analogous|monochromatic [--results 6] [--slices 30] [--json] <color>")
+		return 2
+	}
+	if *jsonOutput {
+		inspections := make([]map[string]any, len(colors))
+		for index, paletteColor := range colors {
+			inspections[index] = paletteColor.Inspect()
+		}
+		return writeJSON(stdout, inspections)
+	}
+	for _, paletteColor := range colors {
+		fmt.Fprintln(stdout, paletteColor.ToHexString())
+	}
+	return 0
+}
+
+func runContrast(args []string, stdout, stderr io.Writer) int {
+	flags := flag.NewFlagSet("contrast", flag.ContinueOnError)
+	flags.SetOutput(stderr)
+	jsonOutput := flags.Bool("json", false, "output JSON")
+	if flags.Parse(args) != nil || flags.NArg() != 2 {
+		usage(stderr, "contrast [--json] <first> <second>")
+		return 2
+	}
+	first, _ := tinycolor.FromCompat(flags.Arg(0), false)
+	second, _ := tinycolor.FromCompat(flags.Arg(1), false)
+	ratio := tinycolor.Readability(first, second)
+	if *jsonOutput {
+		return writeJSON(stdout, map[string]any{
+			"ratio":    ratio,
+			"aaSmall":  tinycolor.IsReadable(first, second, tinycolor.WCAG2Options{Level: "AA", Size: "small"}),
+			"aaLarge":  tinycolor.IsReadable(first, second, tinycolor.WCAG2Options{Level: "AA", Size: "large"}),
+			"aaaSmall": tinycolor.IsReadable(first, second, tinycolor.WCAG2Options{Level: "AAA", Size: "small"}),
+			"aaaLarge": tinycolor.IsReadable(first, second, tinycolor.WCAG2Options{Level: "AAA", Size: "large"}),
+		})
+	}
+	fmt.Fprintln(stdout, ratio)
+	return 0
+}
+
+func usage(stderr io.Writer, command string) {
+	if command == "" {
+		fmt.Fprintln(stderr, "Usage: tinycolor-compat <parse|convert|lighten|palette|contrast>")
+		return
+	}
+	fmt.Fprintln(stderr, "Usage: tinycolor-compat "+command)
+}
+
+func writeJSON(stdout io.Writer, value any) int {
+	if err := json.NewEncoder(stdout).Encode(value); err != nil {
+		return 1
+	}
+	return 0
 }
 
 func handle(request compat.Request) compat.Response {
@@ -353,11 +538,11 @@ func truthy(value any) bool {
 	}
 }
 
-func write(response compat.Response) {
+func write(response compat.Response, stdout, stderr io.Writer) {
 	encoded, err := compat.Encode(response)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintln(stderr, err)
 		return
 	}
-	fmt.Println(string(encoded))
+	fmt.Fprintln(stdout, string(encoded))
 }
