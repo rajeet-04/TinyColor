@@ -1,0 +1,14 @@
+{
+  "project": "tinycolor-go-port",
+  "source_oracle": "mod.js",
+  "source_tests": "test.js",
+  "target_language": "go",
+  "commit_docs": true,
+  "research_enabled": true,
+  "plan_checker_enabled": true,
+  "nyquist_validation_enabled": true,
+  "workflow": {
+    "ui_phase": false,
+    "ui_safety_gate": false
+  }
+}
