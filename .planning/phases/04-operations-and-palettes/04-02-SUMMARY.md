@@ -43,7 +43,7 @@ with deterministic owner-tagged operations reproducers.
 The six Mix mismatch records revealed that the Go value dropped TinyColor's
 observable raw interpolated RGBA input. Follow-up commit `d2f22c6`
 (`fix(04-02): preserve mix original metadata`) restored that metadata. The
-final Phase 4 gate passed all `58/58` operations rows with zero mismatches.
+final Phase 4 parity gate passed all `69/69` operations rows with zero mismatches.
 
 ## Commits
 
