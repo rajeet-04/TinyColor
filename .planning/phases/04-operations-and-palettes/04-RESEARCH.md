@@ -1,7 +1,7 @@
 # Phase 4: Operations and Palettes - Research
 
-**Researched:** 2026-08-01  
-**Domain:** Source-compatible TinyColor operations, WCAG readability, and color palettes in Go  
+**Researched:** 2026-08-01
+**Domain:** Source-compatible TinyColor operations, WCAG readability, and color palettes in Go
 **Confidence:** HIGH
 
 ## User Constraints
@@ -263,5 +263,5 @@ None.
 - Architecture: HIGH - approved Phase 4 design and existing owner boundaries agree.
 - Semantics and pitfalls: HIGH - direct local source, source tests, and oracle edge probe.
 
-**Research date:** 2026-08-01  
+**Research date:** 2026-08-01
 **Valid until:** this checkout's `mod.js` or `test.js` changes.
