@@ -129,10 +129,10 @@ func TestReadability(t *testing.T) {
 
 func TestIsReadable(t *testing.T) {
 	for _, test := range []struct {
-		name      string
-		ratio     float64
-		options   WCAG2Options
-		expected  bool
+		name     string
+		ratio    float64
+		options  WCAG2Options
+		expected bool
 	}{
 		{"AA small threshold", 4.5, WCAG2Options{Level: "AA", Size: "small"}, true},
 		{"AA large threshold", 3, WCAG2Options{Level: "AA", Size: "large"}, true},
