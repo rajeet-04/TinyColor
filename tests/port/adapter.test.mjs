@@ -28,3 +28,45 @@ for (const response of [malformed, unknown]) {
   assert.notEqual(Object.hasOwn(response, "result"), Object.hasOwn(response, "error"));
   assert.equal(typeof response.error, "string");
 }
+
+const [lightenDefault, lightenZero, spinOmitted, spinNull, mixed, badModifier] = run([
+  '{"id":"lighten-default","operation":"modify","input":"red","args":{"method":"lighten"}}',
+  '{"id":"lighten-zero","operation":"modify","input":"red","args":{"method":"lighten","amount":0}}',
+  '{"id":"spin-omitted","operation":"modify","input":"red","args":{"method":"spin"}}',
+  '{"id":"spin-null","operation":"modify","input":"red","args":{"method":"spin","amount":null}}',
+  '{"id":"mix-default","operation":"mix","input":"red","args":{"other":"#000"}}',
+  '{"id":"bad-modifier","operation":"modify","input":"red","args":{"method":"unknown"}}',
+].join("\n"));
+
+assert.deepEqual(lightenDefault, {
+  id: "lighten-default",
+  result: {
+    before: success.result,
+    after: {
+      ...success.result,
+      rgb: { r: 255, g: 51, b: 51, a: 1 },
+      value: "#ff3333",
+    },
+    sameReceiver: true,
+  },
+});
+assert.deepEqual(lightenZero.result, {
+  before: success.result,
+  after: success.result,
+  sameReceiver: true,
+});
+assert.equal(spinOmitted.result.after.value, "black");
+assert.equal(spinOmitted.result.after.original, "red");
+assert.deepEqual(spinNull.result, lightenZero.result);
+assert.deepEqual(mixed, {
+  id: "mix-default",
+  result: {
+    valid: true,
+    format: "rgb",
+    alpha: 1,
+    rgb: { r: 128, g: 0, b: 0, a: 1 },
+    value: "rgb(128, 0, 0)",
+    original: { r: 127.5, g: 0, b: 0, a: 1 },
+  },
+});
+assert.deepEqual(badModifier, { id: "bad-modifier", error: "unsupported method" });
