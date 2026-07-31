@@ -343,13 +343,20 @@ func (c *Color) Spin(amount float64) *Color {
 func Mix(first, second Color, amount float64) Color {
 	p := amount / 100
 	firstRGB, secondRGB := first.ToRGB(), second.ToRGB()
+	raw := map[string]float64{
+		"r": (float64(secondRGB.R)-float64(firstRGB.R))*p + float64(firstRGB.R),
+		"g": (float64(secondRGB.G)-float64(firstRGB.G))*p + float64(firstRGB.G),
+		"b": (float64(secondRGB.B)-float64(firstRGB.B))*p + float64(firstRGB.B),
+		"a": (second.model.A-first.model.A)*p + first.model.A,
+	}
 	return Color{model: color.Model{
-		R:      clampChannel((float64(secondRGB.R)-float64(firstRGB.R))*p + float64(firstRGB.R)),
-		G:      clampChannel((float64(secondRGB.G)-float64(firstRGB.G))*p + float64(firstRGB.G)),
-		B:      clampChannel((float64(secondRGB.B)-float64(firstRGB.B))*p + float64(firstRGB.B)),
-		A:      clampAlpha((second.model.A-first.model.A)*p + first.model.A),
-		Valid:  true,
-		Format: color.FormatRGB,
+		R:        clampChannel(raw["r"]),
+		G:        clampChannel(raw["g"]),
+		B:        clampChannel(raw["b"]),
+		A:        clampAlpha(raw["a"]),
+		Valid:    true,
+		Format:   color.FormatRGB,
+		Original: raw,
 	}}
 }
 
