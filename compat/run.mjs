@@ -24,14 +24,14 @@ let passed = 0;
 let mismatches = 0;
 for (const request of cases) {
   const js = run(process.execPath, ["compat/js-runner.mjs"], root, request);
-  const go = run("go", ["run", "./cmd/tinycolor-compat"], resolve(root, "go"), request);
+  const go = run("go", ["run", "./cmd/tinycolor-compat"], resolve(root, "src"), request);
   if (same(js, go)) {
     passed++;
     continue;
   }
   mismatches++;
   const protocol = Object.hasOwn(js, "result") !== Object.hasOwn(go, "result");
-  console.log(JSON.stringify({ case: request.id, operation: request.operation, request, javascript: js, go, owner: protocol ? "compat" : "rajeet-04", suspectedPackage: protocol ? "compat" : "go/tinycolor" }));
+  console.log(JSON.stringify({ case: request.id, operation: request.operation, request, javascript: js, go, owner: protocol ? "compat" : "rajeet-04", suspectedPackage: protocol ? "compat" : "src/tinycolor" }));
 }
 
 console.log(`cases: ${cases.length}`);

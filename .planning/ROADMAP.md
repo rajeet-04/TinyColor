@@ -21,7 +21,7 @@ through parsing and observable output, to operations and delivery proof.
 **Depends on**: Nothing (first phase)
 **Requirements**: [EQV-01, QLT-01, QLT-03]
 **Success Criteria**:
-  1. `go/` builds as an independent module without changing JavaScript source files.
+  1. `src/` builds as an independent module without changing JavaScript source files.
   2. Node and Go runners accept and emit the documented JSONL request/response protocol.
   3. A differential command reports case count, mismatch count, and complete mismatch records.
 **Plans**: 1 plan (complete 2026-08-01)
@@ -37,11 +37,11 @@ Plans:
   1. Hex, RGB(A), HSL(A), HSV(A), CSS names, transparent, and object inputs produce matching state.
   2. Permissive syntax, boundary values, invalid input, and alpha normalization match the oracle corpus.
   3. Every discovered parser mismatch has a deterministic regression record.
-**Plans**: 2 plans
+**Plans**: 2 plans (complete 2026-08-01)
 
 Plans:
-- [ ] 02-01: Replace Phase 1 fixed inputs with normalized color/model and HEX/RGB/name parsing.
-- [ ] 02-02: Add HSL/HSV/object parsing and parser differential corpus.
+- [x] 02-01: Replace Phase 1 fixed inputs with normalized color/model and HEX/RGB/name parsing.
+- [x] 02-02: Add HSL/HSV/object parsing and parser differential corpus.
 
 ### Phase 3: Conversion and Representation
 **Goal**: Go exposes TinyColor-equivalent conversion, string formatting, format fallback, and color analysis.
@@ -78,7 +78,7 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |---|---|---|---|
 | 1. Foundation and Oracle | 1/1 | Complete | 2026-08-01 |
-| 2. Parsing and Color State | 0/2 | Not started | - |
+| 2. Parsing and Color State | 2/2 | Complete | 2026-08-01 |
 | 3. Conversion and Representation | 0/TBD | Not started | - |
 | 4. Operations and Palettes | 0/TBD | Not started | - |
 | 5. Delivery Evidence | 0/TBD | Not started | - |

@@ -28,7 +28,7 @@ remains intact in the repository.
 
 ## Wave 0 — Foundation and behavioral oracle
 
-1. Create `go/` as an independent module; add a minimal public package, a JSON
+1. Create `src/` as an independent module; add a minimal public package, a JSON
    Lines request/response protocol, and a Go runner executable. Implement only
    the fixed smoke-corpus inputs needed to prove the protocol; all generalized
    parsing and public API behavior remains in later waves.

@@ -7,7 +7,7 @@ immutable JS source (mod.js, test.js)
              │
 cases ── differential driver ── Go JSONL runner
                                      │
-                              go/tinycolor public API
+                              src/tinycolor public API
                                 │              │
                      internal/color        internal/parser
                                 │              │
@@ -19,12 +19,12 @@ cases ── differential driver ── Go JSONL runner
 1. **Compatibility boundary (`compat/` and runner):** accepts JSON-safe dynamic
    input, dispatches named operations, and returns a stable record. It owns no
    color math.
-2. **Parsing/model (`go/internal/...`):** turns strings and typed Go inputs into
+2. **Parsing/model (`src/internal/...`):** turns strings and typed Go inputs into
    normalized RGBA plus validity and source-format metadata.
-3. **Public library (`go/tinycolor`):** exposes explicit Go values and methods.
+3. **Public library (`src/tinycolor`):** exposes explicit Go values and methods.
    It owns conversions, formatting, mutation, utilities, readability, and
    palettes.
-4. **CLI (`go/cmd/tinycolor`):** a thin user-facing wrapper; it calls the same
+4. **CLI (`src/cmd/tinycolor`):** a thin user-facing wrapper; it calls the same
    library and does not reimplement parsing or conversion.
 
 ## Compatibility protocol
@@ -42,4 +42,3 @@ method rounds them. Alpha is stored in `[0,1]`; detected format and validity are
 separate from RGB channels because invalid TinyColor values still render as
 black. Original input is adapter metadata: typed Go callers should not need to
 recover JavaScript object identity.
-

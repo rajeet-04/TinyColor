@@ -36,8 +36,9 @@ func TestPhaseOneInputsMatchTinyColor(t *testing.T) {
 	}
 }
 
-func TestPhaseOneRejectsUnsupportedInput(t *testing.T) {
-	if _, err := FromCompat("blue", false); err == nil {
-		t.Fatal("expected unsupported input error")
+func TestInvalidInputIsAColorState(t *testing.T) {
+	color, err := FromCompat("this is not a color", false)
+	if err != nil || color.Valid() || color.String() != "#000000" {
+		t.Fatalf("invalid input = %#v, %v", color, err)
 	}
 }
