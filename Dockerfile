@@ -3,8 +3,8 @@ WORKDIR /app/src
 COPY src/go.mod ./
 RUN go mod download
 COPY src/ ./
-RUN go build -o /tinycolor-compat ./cmd/tinycolor-compat
+RUN go build -o /tinycolor ./cmd/tinycolor-compat
 
 FROM scratch
-COPY --from=build /tinycolor-compat /tinycolor-compat
-ENTRYPOINT ["/tinycolor-compat"]
+COPY --from=build /tinycolor /tinycolor
+ENTRYPOINT ["/tinycolor"]
