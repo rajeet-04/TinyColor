@@ -439,9 +439,12 @@ func (c Color) Analogous(results, slices int) []Color {
 	part := 360 / float64(slices)
 	palette := []Color{c}
 	hue := math.Mod(hsl.H-float64(int(part*float64(results))>>1)+720, 360)
+	input := map[string]any{"h": hue, "s": hsl.S, "l": hsl.L, "a": hsl.A}
 	for remaining := results - 1; remaining > 0; remaining-- {
 		hue = math.Mod(hue+part, 360)
-		palette = append(palette, hslColor(hue, hsl.S, hsl.L, hsl.A, true))
+		input["h"] = hue
+		color, _ := FromCompat(input, false)
+		palette = append(palette, color)
 	}
 	return palette
 }
