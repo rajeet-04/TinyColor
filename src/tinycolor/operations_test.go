@@ -233,6 +233,12 @@ func TestPaletteCustomizationsAndIndependence(t *testing.T) {
 			t.Fatalf("analogous alpha at %d = %v", index, color.Alpha())
 		}
 	}
+	for index, color := range analogous[1:] {
+		original, ok := color.Original().(map[string]any)
+		if !ok || original["h"] != float64(6) {
+			t.Fatalf("analogous original at %d = %#v", index+1, color.Original())
+		}
+	}
 	triad := transparent.Triad()
 	if triad[0].Alpha() != .5 || triad[1].Alpha() != 1 || triad[2].Alpha() != 1 {
 		t.Fatalf("triad alpha = %#v", triad)
