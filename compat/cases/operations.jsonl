@@ -48,6 +48,8 @@
 {"id":"readable-default-options","operation":"isReadable","input":"#ff0088","args":{"other":"#5c1a72","options":{}},"owner":"C-mrashis","suspectedPackage":"compat"}
 {"id":"readable-mixed-case","operation":"isReadable","input":"#db91b8","args":{"other":"#2e0c3a","options":{"level":"aaa","size":"LARGE"}},"owner":"C-mrashis","suspectedPackage":"compat"}
 {"id":"readable-falsy-options","operation":"isReadable","input":"#ff0088","args":{"other":"#2e0c3a","options":{"level":false,"size":0}},"owner":"C-mrashis","suspectedPackage":"compat"}
+{"id":"readable-number-level-error","operation":"isReadable","input":"#000","args":{"other":"#fff","options":{"level":1,"size":"small"}},"owner":"C-mrashis","suspectedPackage":"compat"}
+{"id":"readable-true-size-error","operation":"isReadable","input":"#000","args":{"other":"#fff","options":{"level":"AA","size":true}},"owner":"C-mrashis","suspectedPackage":"compat"}
 {"id":"most-readable-first-tie","operation":"mostReadable","input":"#fff","args":{"candidates":["white","#fff"],"options":{"includeFallbackColors":false}},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
 {"id":"most-readable-fallback","operation":"mostReadable","input":"#123","args":{"candidates":["#124","#125"],"options":{"includeFallbackColors":true}},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
 {"id":"most-readable-no-fallback","operation":"mostReadable","input":"#123","args":{"candidates":["#124","#125"],"options":{"includeFallbackColors":false}},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
