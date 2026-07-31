@@ -36,11 +36,33 @@ const handle = (request) => {
       return respond(request.id, tinycolor.equals(request.input, args.other));
     case "clone":
       return respond(request.id, inspect(color().clone()));
+    case "modify":
+      return modify(request.id, color(), args);
+    case "mix":
+      return respond(request.id, inspect(tinycolor.mix(request.input, args.other, amount(args, 50))));
     case "randomInvariant":
       return randomInvariant(request.id);
     default:
       return respond(request.id, undefined, "unsupported operation");
   }
+};
+
+const amount = (args, defaultAmount) => args.amount === 0 ? 0 : args.amount || defaultAmount;
+
+const modify = (id, color, args) => {
+  const before = inspect(color);
+  let returned;
+  switch (args.method) {
+    case "lighten": returned = color.lighten(amount(args, 10)); break;
+    case "brighten": returned = color.brighten(amount(args, 10)); break;
+    case "darken": returned = color.darken(amount(args, 10)); break;
+    case "saturate": returned = color.saturate(amount(args, 10)); break;
+    case "desaturate": returned = color.desaturate(amount(args, 10)); break;
+    case "greyscale": returned = color.greyscale(); break;
+    case "spin": returned = Object.hasOwn(args, "amount") ? color.spin(args.amount) : color.spin(); break;
+    default: return respond(id, undefined, "unsupported method");
+  }
+  return respond(id, { before, after: inspect(color), sameReceiver: returned === color });
 };
 
 const output = (id, color, args) => {
