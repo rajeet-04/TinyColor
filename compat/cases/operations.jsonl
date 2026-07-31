@@ -50,6 +50,7 @@
 {"id":"most-readable-fallback","operation":"mostReadable","input":"#123","args":{"candidates":["#124","#125"],"options":{"includeFallbackColors":true}},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
 {"id":"most-readable-no-fallback","operation":"mostReadable","input":"#123","args":{"candidates":["#124","#125"],"options":{"includeFallbackColors":false}},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
 {"id":"most-readable-empty-fallback","operation":"mostReadable","input":"#fff","args":{"candidates":[],"options":{"includeFallbackColors":true}},"owner":"C-mrashis","suspectedPackage":"compat"}
+{"id":"most-readable-empty-dark-fallback","operation":"mostReadable","input":"#123","args":{"candidates":[],"options":{"includeFallbackColors":true}},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
 {"id":"most-readable-empty-no-fallback","operation":"mostReadable","input":"#fff","args":{"candidates":[],"options":{"includeFallbackColors":false}},"owner":"C-mrashis","suspectedPackage":"compat"}
 {"id":"palette-complement","operation":"palette","input":"red","args":{"method":"complement"},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
 {"id":"palette-split-complement","operation":"palette","input":"red","args":{"method":"splitcomplement"},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
