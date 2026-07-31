@@ -6,6 +6,7 @@ import (
 	"math"
 	"math/rand/v2"
 	"strconv"
+	"strings"
 
 	"github.com/rajeet-04/tinycolor-go/internal/color"
 	"github.com/rajeet-04/tinycolor-go/internal/parser"
@@ -25,6 +26,11 @@ type RGB struct {
 }
 type HSL struct{ H, S, L, A float64 }
 type HSV struct{ H, S, V, A float64 }
+type WCAG2Options struct {
+	Level                 string
+	Size                  string
+	IncludeFallbackColors bool
+}
 
 func FromCompat(input any, fromRatio bool) (Color, error) {
 	if fromRatio {
@@ -172,6 +178,54 @@ func (c Color) Luminance() float64 {
 		return math.Pow((z+.055)/1.055, 2.4)
 	}
 	return .2126*f(x.R) + .7152*f(x.G) + .0722*f(x.B)
+}
+func Readability(first, second Color) float64 {
+	firstLuminance, secondLuminance := first.Luminance(), second.Luminance()
+	return (math.Max(firstLuminance, secondLuminance) + .05) / (math.Min(firstLuminance, secondLuminance) + .05)
+}
+func IsReadable(first, second Color, options WCAG2Options) bool {
+	return isReadableRatio(Readability(first, second), options)
+}
+func MostReadable(base Color, candidates []Color, options WCAG2Options) (Color, bool) {
+	if len(candidates) == 0 {
+		return Color{}, false
+	}
+	bestColor := candidates[0]
+	bestScore := Readability(base, bestColor)
+	for _, candidate := range candidates[1:] {
+		if score := Readability(base, candidate); score > bestScore {
+			bestScore, bestColor = score, candidate
+		}
+	}
+	if IsReadable(base, bestColor, options) || !options.IncludeFallbackColors {
+		return bestColor, true
+	}
+	white, _ := FromCompat("#fff", false)
+	black, _ := FromCompat("#000", false)
+	return MostReadable(base, []Color{white, black}, WCAG2Options{Level: options.Level, Size: options.Size})
+}
+func isReadableRatio(ratio float64, options WCAG2Options) bool {
+	options = normalizeWCAG2Options(options)
+	switch options.Level + options.Size {
+	case "AAsmall", "AAAlarge":
+		return ratio >= 4.5
+	case "AAlarge":
+		return ratio >= 3
+	case "AAAsmall":
+		return ratio >= 7
+	}
+	return false
+}
+func normalizeWCAG2Options(options WCAG2Options) WCAG2Options {
+	options.Level = strings.ToUpper(options.Level)
+	options.Size = strings.ToLower(options.Size)
+	if options.Level != "AA" && options.Level != "AAA" {
+		options.Level = "AA"
+	}
+	if options.Size != "small" && options.Size != "large" {
+		options.Size = "small"
+	}
+	return options
 }
 func (c Color) IsDark() bool  { return c.Brightness() < 128 }
 func (c Color) IsLight() bool { return !c.IsDark() }
