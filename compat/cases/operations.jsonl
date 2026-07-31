@@ -45,3 +45,14 @@
 {"id":"most-readable-no-fallback","operation":"mostReadable","input":"#123","args":{"candidates":["#124","#125"],"options":{"includeFallbackColors":false}},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
 {"id":"most-readable-empty-fallback","operation":"mostReadable","input":"#fff","args":{"candidates":[],"options":{"includeFallbackColors":true}},"owner":"C-mrashis","suspectedPackage":"compat"}
 {"id":"most-readable-empty-no-fallback","operation":"mostReadable","input":"#fff","args":{"candidates":[],"options":{"includeFallbackColors":false}},"owner":"C-mrashis","suspectedPackage":"compat"}
+{"id":"palette-complement","operation":"palette","input":"red","args":{"method":"complement"},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
+{"id":"palette-split-complement","operation":"palette","input":"red","args":{"method":"splitcomplement"},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
+{"id":"palette-triad","operation":"palette","input":"red","args":{"method":"triad"},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
+{"id":"palette-tetrad","operation":"palette","input":"red","args":{"method":"tetrad"},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
+{"id":"palette-analogous-default","operation":"palette","input":"red","args":{"method":"analogous"},"owner":"C-mrashis","suspectedPackage":"compat"}
+{"id":"palette-analogous-custom","operation":"palette","input":"#336699","args":{"method":"analogous","results":4,"slices":12},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
+{"id":"palette-analogous-zero-default","operation":"palette","input":"red","args":{"method":"analogous","results":0,"slices":0},"owner":"C-mrashis","suspectedPackage":"compat"}
+{"id":"palette-monochromatic-default","operation":"palette","input":"red","args":{"method":"monochromatic"},"owner":"C-mrashis","suspectedPackage":"compat"}
+{"id":"palette-monochromatic-zero-default","operation":"palette","input":"red","args":{"method":"monochromatic","results":0},"owner":"C-mrashis","suspectedPackage":"compat"}
+{"id":"palette-wrapped-split","operation":"palette","input":"#ff0066","args":{"method":"splitcomplement"},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
+{"id":"palette-analogous-alpha","operation":"palette","input":"rgba(255, 0, 0, .5)","args":{"method":"analogous","results":3,"slices":30},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
