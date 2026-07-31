@@ -2,6 +2,7 @@ package tinycolor
 
 import (
 	"math"
+	"strings"
 	"testing"
 )
 
@@ -172,4 +173,80 @@ func TestMostReadable(t *testing.T) {
 	if _, ok := MostReadable(base, nil, WCAG2Options{IncludeFallbackColors: true}); ok {
 		t.Fatal("empty candidates with fallback must have no result")
 	}
+}
+
+func TestComplement(t *testing.T) {
+	red, _ := FromCompat("red", false)
+	if got := red.Complement().ToHex(); got != "00ffff" {
+		t.Fatalf("Complement() = %s", got)
+	}
+	if got := red.ToHex(); got != "ff0000" {
+		t.Fatalf("Complement() mutated input to %s", got)
+	}
+	transparent, _ := FromCompat("rgba(255, 0, 0, .5)", false)
+	if got := transparent.Complement().Alpha(); got != .5 {
+		t.Fatalf("Complement alpha = %v", got)
+	}
+}
+
+func TestPaletteOrders(t *testing.T) {
+	red, _ := FromCompat("red", false)
+	for _, test := range []struct {
+		name     string
+		palette  []Color
+		expected string
+	}{
+		{"split complement", red.SplitComplement(), "ff0000,ccff00,0066ff"},
+		{"triad", red.Triad(), "ff0000,00ff00,0000ff"},
+		{"tetrad", red.Tetrad(), "ff0000,80ff00,00ffff,7f00ff"},
+		{"analogous", red.Analogous(6, 30), "ff0000,ff0066,ff0033,ff0000,ff3300,ff6600"},
+		{"monochromatic", red.Monochromatic(6), "ff0000,2a0000,550000,800000,aa0000,d40000"},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			if got := paletteHex(test.palette); got != test.expected {
+				t.Fatalf("%s = %s", test.name, got)
+			}
+		})
+	}
+}
+
+func TestPaletteCustomizationsAndIndependence(t *testing.T) {
+	blue, _ := FromCompat("#336699", false)
+	if got := paletteHex(blue.Analogous(4, 12)); got != "336699,339999,336699,333399" {
+		t.Fatalf("custom analogous = %s", got)
+	}
+	wrapped, _ := FromCompat("#ff0066", false)
+	if got := paletteHex(wrapped.SplitComplement()); got != "ff0066,ffcc00,00ccff" {
+		t.Fatalf("wrapped split complement = %s", got)
+	}
+	if got := blue.Analogous(0, 12); len(got) != 0 {
+		t.Fatalf("typed analogous zero length = %d", len(got))
+	}
+	if got := blue.Monochromatic(0); len(got) != 0 {
+		t.Fatalf("typed monochromatic zero length = %d", len(got))
+	}
+
+	transparent, _ := FromCompat("rgba(255, 0, 0, .5)", false)
+	analogous := transparent.Analogous(3, 30)
+	for index, color := range analogous {
+		if color.Alpha() != .5 {
+			t.Fatalf("analogous alpha at %d = %v", index, color.Alpha())
+		}
+	}
+	triad := transparent.Triad()
+	if triad[0].Alpha() != .5 || triad[1].Alpha() != 1 || triad[2].Alpha() != 1 {
+		t.Fatalf("triad alpha = %#v", triad)
+	}
+	triad[1].Spin(30)
+	if transparent.ToHexString() != "#ff0000" || triad[2].ToHexString() != "#0000ff" {
+		t.Fatal("palette result mutation changed the source or another result")
+	}
+}
+
+func paletteHex(colors []Color) string {
+	values := make([]string, len(colors))
+	for index, color := range colors {
+		values[index] = color.ToHex()
+	}
+	return strings.Join(values, ",")
 }
