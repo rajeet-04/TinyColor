@@ -55,6 +55,15 @@ func TestModifiers(t *testing.T) {
 	if got := black.ToHexString(); got != "#010101" {
 		t.Fatalf("Brighten pre-clamp rounding = %s", got)
 	}
+	halfAmount := 50.0 / 255
+	black, _ = FromCompat("#000", false)
+	if got := black.Brighten(halfAmount).ToHexString(); got != "#000000" {
+		t.Fatalf("Brighten positive half tie = %s", got)
+	}
+	one, _ := FromCompat("#010101", false)
+	if got := one.Brighten(-halfAmount).ToHexString(); got != "#000000" {
+		t.Fatalf("Brighten negative half tie = %s", got)
+	}
 
 	red, _ = FromCompat("red", false)
 	red.Spin(-120)
