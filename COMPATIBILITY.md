@@ -13,7 +13,7 @@ Target: this checkout's `mod.js` and `test.js` from `bgrins/TinyColor`.
 | HSL/HSV parsing | Passing | `compat/cases/parser.jsonl` | Includes ratios, percentages, wrapping, and object precedence. |
 | Conversion/formatting | Passing | `compat/cases/conversion.jsonl` | 35 fixed JSONL cases; random is invariant-only. |
 | Analysis/readability | Passing | `compat/cases/operations.jsonl` | WCAG defaults, thresholds, ties, fallback, and null selection. |
-| Manipulation/palettes | Passing | `compat/cases/operations.jsonl` | 58 fixed operations cases cover modifiers, Mix, and ordered palettes. |
+| Manipulation/palettes | Passing | `compat/cases/operations.jsonl` | 69 fixed operations cases cover modifiers, Mix, readability, and ordered palettes. |
 | CLI/CI/benchmarks | Planned | Wave 4 | No result claimed yet. |
 | Original Deno suite | Blocked locally | `deno` unavailable | Run when Deno is installed or in CI. |
 
@@ -87,7 +87,7 @@ Go random generators.
 
 ## Phase 4 operations result
 
-On 2026-08-01, the fixed operations corpus passed with **58/58 cases** and
+On 2026-08-01, the fixed operations corpus passed with **69/69 cases** and
 **0 mismatches**. The full available Phase 1-4 gate also retained **9/9**
 smoke, **26/26** HEX/RGB/name, **23/23** parser, and **35/35** conversion
 cases with zero mismatches. This evidence does not claim a Deno source-suite
