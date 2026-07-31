@@ -48,6 +48,8 @@ const handle = (request) => {
       const result = tinycolor.mostReadable(request.input, args.candidates ?? [], args.options);
       return respond(request.id, result ? inspect(result) : null);
     }
+    case "palette":
+      return palette(request.id, color(), args);
     case "randomInvariant":
       return randomInvariant(request.id);
     default:
@@ -71,6 +73,20 @@ const modify = (id, color, args) => {
     default: return respond(id, undefined, "unsupported method");
   }
   return respond(id, { before, after: inspect(color), sameReceiver: returned === color });
+};
+
+const palette = (id, color, args) => {
+  let result;
+  switch (args.method) {
+    case "complement": result = [color.complement()]; break;
+    case "splitcomplement": result = color.splitcomplement(); break;
+    case "triad": result = color.triad(); break;
+    case "tetrad": result = color.tetrad(); break;
+    case "analogous": result = color.analogous(args.results || 6, args.slices || 30); break;
+    case "monochromatic": result = color.monochromatic(args.results || 6); break;
+    default: return respond(id, undefined, "unsupported method");
+  }
+  return respond(id, result.map(inspect));
 };
 
 const output = (id, color, args) => {
