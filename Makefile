@@ -11,6 +11,7 @@ build:
 
 test:
 	node tests/port/adapter.test.mjs
+	node --test tests/original/verify.test.mjs
 	go -C src test ./...
 	node compat/run.mjs compat/cases/smoke.jsonl
 	node compat/run.mjs compat/cases/parser-hex-rgb.jsonl

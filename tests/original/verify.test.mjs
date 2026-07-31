@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -34,5 +34,24 @@ test("verifyManifest reports a malformed manifest line", () => {
     assert.deepEqual(verifyManifest(manifest, root), ["invalid: not a manifest entry"]);
   } finally {
     rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("verifyManifest rejects entries outside the manifest root", () => {
+  const parent = mkdtempSync(join(tmpdir(), "tinycolor-verify-"));
+  const root = join(parent, "root");
+  const outside = join(parent, "outside.txt");
+  try {
+    mkdirSync(root);
+    writeFileSync(outside, "outside");
+    const manifest = join(root, "manifest.sha256");
+    writeFileSync(manifest, `${sha256("outside")}  ${outside}\n${sha256("outside")}  ../outside.txt\n`);
+
+    assert.deepEqual(verifyManifest(manifest, root), [
+      `invalid: ${outside}`,
+      "invalid: ../outside.txt",
+    ]);
+  } finally {
+    rmSync(parent, { recursive: true, force: true });
   }
 });

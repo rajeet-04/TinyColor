@@ -137,8 +137,8 @@ func TestRunJSONLAndUsageErrors(t *testing.T) {
 			} else if stdout.String() != test.wantStdout {
 				t.Fatalf("stdout = %q, want %q", stdout.String(), test.wantStdout)
 			}
-			if test.wantStatus == 2 && !strings.Contains(stderr.String(), "Usage:") {
-				t.Fatalf("stderr = %q, want usage", stderr.String())
+			if test.wantStatus == 2 && !strings.Contains(stderr.String(), "Usage: tinycolor ") {
+				t.Fatalf("stderr = %q, want tinycolor usage", stderr.String())
 			}
 		})
 	}
