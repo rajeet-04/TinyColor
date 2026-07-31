@@ -1,11 +1,16 @@
 # TinyColor Go Port
 
-## Purpose
+## What This Is
 
 Create a fresh Go port of the local `bgrins/TinyColor` checkout with behavioral
 parity demonstrated through unchanged-source differential testing.
 
-## Success criteria
+## Core Value
+
+Observable behavior from the pinned TinyColor checkout is the specification;
+the Go port is accepted only when exact differential evidence agrees.
+
+## Requirements
 
 - The upstream JavaScript source is untouched.
 - Go handles every behavior covered by the defined compatibility corpus.
@@ -18,4 +23,3 @@ parity demonstrated through unchanged-source differential testing.
 - Target source: local `mod.js` / `test.js`; MIT attribution retained.
 - Target language: Go 1.26+; standard library first.
 - Node is available as local oracle runtime; Deno is currently unavailable.
-
