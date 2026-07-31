@@ -4,7 +4,7 @@
 
 | Layer | Purpose | Command when implemented |
 |---|---|---|
-| Go unit tests | Local conversion and parser invariants | `go test ./...` from `go/` |
+| Go unit tests | Local conversion and parser invariants | `go test ./...` from `src/` |
 | Differential corpus | Exact observable parity with local `mod.js` | `node compat/run.mjs <jsonl>` |
 | Regression corpus | Permanently reproduce every found mismatch | `node compat/run.mjs compat/cases/regression.jsonl` |
 | Seeded fuzz cases | Find coercion, bounds, and rounding gaps | documented seed command |
@@ -29,4 +29,3 @@
 3. State transitions: clone, set alpha, all instance modifiers, default versus
    explicit zero amount.
 4. Structured random RGB/RGBA/HSL/HSV inputs generated from a fixed seed.
-

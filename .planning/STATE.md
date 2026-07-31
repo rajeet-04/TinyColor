@@ -9,5 +9,8 @@
 - Phase 1 completed in commit `78423e3`: Go/Node JSONL runners, protocol tests,
   and a fixed corpus passed 9/9 with zero mismatches. This is not whole-library
   parity.
-- Phase 2 is planned next; it replaces the fixed Phase 1 input decoder with the
-  complete TinyColor parser while preserving the compatibility protocol.
+- Phase 2 completed locally: the normalized parser covers HEX, RGB(A), HSL(A),
+  HSV(A), names, objects, invalid input, and FromRatio. Differential evidence:
+  26/26 HEX/RGB/name cases, 23/23 complete parser cases, and 9/9 smoke cases.
+- The Go module lives in `src/`; `tests/original/manifest.sha256` pins the
+  unmodified root JavaScript oracle.
