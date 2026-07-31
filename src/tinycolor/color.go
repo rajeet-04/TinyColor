@@ -494,40 +494,8 @@ func hsvColor(hue, saturation, value float64) Color {
 }
 
 func (c *Color) setHSL(h, s, l float64) {
-	c.model.R, c.model.G, c.model.B = hslToRGB(h, s, l)
-}
-
-func hslToRGB(h, s, l float64) (float64, float64, float64) {
-	if s == 0 {
-		channel := l * 255
-		return channel, channel, channel
-	}
-	var q float64
-	if l < .5 {
-		q = l * (1 + s)
-	} else {
-		q = l + s - l*s
-	}
-	p := 2*l - q
-	channel := func(t float64) float64 {
-		if t < 0 {
-			t++
-		}
-		if t > 1 {
-			t--
-		}
-		switch {
-		case t*6 < 1:
-			return p + (q-p)*6*t
-		case t*2 < 1:
-			return q
-		case t*3 < 2:
-			return p + (q-p)*(2.0/3.0-t)*6
-		default:
-			return p
-		}
-	}
-	return channel(h+1.0/3.0) * 255, channel(h) * 255, channel(h-1.0/3.0) * 255
+	converted := hslColor(h*360, s, l, c.model.A, true)
+	c.model.R, c.model.G, c.model.B = converted.model.R, converted.model.G, converted.model.B
 }
 
 func clamp01(value float64) float64      { return math.Min(1, math.Max(0, value)) }
