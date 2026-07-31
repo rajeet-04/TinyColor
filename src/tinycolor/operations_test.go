@@ -88,8 +88,12 @@ func TestModifiers(t *testing.T) {
 func TestMix(t *testing.T) {
 	black, _ := FromCompat("#000", false)
 	white, _ := FromCompat("#fff", false)
-	if got := Mix(black, white, 50).ToHexString(); got != "#808080" {
+	mixedHalf := Mix(black, white, 50)
+	if got := mixedHalf.ToHexString(); got != "#808080" {
 		t.Fatalf("Mix(50) = %s", got)
+	}
+	if got, ok := mixedHalf.Original().(map[string]float64); !ok || got["r"] != 127.5 || got["g"] != 127.5 || got["b"] != 127.5 || got["a"] != 1 {
+		t.Fatalf("Mix(50) original = %#v", mixedHalf.Original())
 	}
 	if got := Mix(black, white, 0).ToHexString(); got != "#000000" {
 		t.Fatalf("Mix(0) = %s", got)
