@@ -1,14 +1,17 @@
 .PHONY: build test verify fmt-check hashes fuzz bench clean
 
-GO_CACHE ?= $(CURDIR)/.cache/go-build
-GO = GOCACHE=$(GO_CACHE) go
+GOCACHE ?= $(CURDIR)/.cache/go-build
+export GOCACHE
+GOEXE := $(shell go env GOEXE)
+BINARY := bin/tinycolor$(GOEXE)
 
 build:
-	$(GO) -C src build -o ../bin/tinycolor ./cmd/tinycolor-compat
+	node -e "require('node:fs').mkdirSync('bin', { recursive: true })"
+	go -C src build -o ../$(BINARY) ./cmd/tinycolor-compat
 
 test:
 	node tests/port/adapter.test.mjs
-	$(GO) -C src test ./...
+	go -C src test ./...
 	node compat/run.mjs compat/cases/smoke.jsonl
 	node compat/run.mjs compat/cases/parser-hex-rgb.jsonl
 	node compat/run.mjs compat/cases/parser.jsonl
@@ -16,7 +19,7 @@ test:
 	node compat/run.mjs compat/cases/operations.jsonl
 
 verify: fmt-check hashes test
-	$(GO) -C src vet ./...
+	go -C src vet ./...
 
 fmt-check:
 	node -e "const { readdirSync } = require('node:fs'); const { join } = require('node:path'); const { execFileSync } = require('node:child_process'); const files = []; const walk = (dir) => readdirSync(dir, { withFileTypes: true }).forEach((entry) => entry.isDirectory() ? walk(join(dir, entry.name)) : entry.name.endsWith('.go') && files.push(join(dir, entry.name))); walk('src'); const output = execFileSync('gofmt', ['-l', ...files], { encoding: 'utf8' }).trim(); if (output) { console.error(output); process.exit(1); }"

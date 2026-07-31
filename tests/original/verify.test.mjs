@@ -24,3 +24,15 @@ test("verifyManifest accepts matching files and reports a changed path", () => {
     rmSync(root, { recursive: true, force: true });
   }
 });
+
+test("verifyManifest reports a malformed manifest line", () => {
+  const root = mkdtempSync(join(tmpdir(), "tinycolor-verify-"));
+  try {
+    const manifest = join(root, "manifest.sha256");
+    writeFileSync(manifest, "not a manifest entry\n");
+
+    assert.deepEqual(verifyManifest(manifest, root), ["invalid: not a manifest entry"]);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});

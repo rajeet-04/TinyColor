@@ -6,7 +6,9 @@ const digest = (file) => createHash("sha256").update(readFileSync(file)).digest(
 
 export function verifyManifest(manifestPath, root) {
   return readFileSync(manifestPath, "utf8").split(/\r?\n/).filter(Boolean).flatMap((line) => {
-    const [, expected, file] = line.match(/^(\S+)\s{2}(.+)$/) ?? [];
+    const match = line.match(/^(\S+)\s{2}(.+)$/);
+    if (!match) return [`invalid: ${line}`];
+    const [, expected, file] = match;
     const path = resolve(root, file);
     try {
       return digest(path) === expected ? [] : [`mismatch: ${file}`];
