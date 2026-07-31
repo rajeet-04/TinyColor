@@ -6,6 +6,8 @@
 {"id":"mod-brighten-zero","operation":"modify","input":"#804020","args":{"method":"brighten","amount":0},"owner":"C-mrashis","suspectedPackage":"compat"}
 {"id":"mod-brighten-clamp","operation":"modify","input":"#fefefe","args":{"method":"brighten","amount":100},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
 {"id":"mod-brighten-alpha","operation":"modify","input":"#80402080","args":{"method":"brighten","amount":20},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
+{"id":"mod-brighten-positive-half","operation":"modify","input":"#000","args":{"method":"brighten","amount":0.19607843137254902},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
+{"id":"mod-brighten-negative-half","operation":"modify","input":"#010101","args":{"method":"brighten","amount":-0.19607843137254902},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
 {"id":"mod-darken-normal","operation":"modify","input":"#804020","args":{"method":"darken","amount":20},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
 {"id":"mod-darken-zero","operation":"modify","input":"#804020","args":{"method":"darken","amount":0},"owner":"C-mrashis","suspectedPackage":"compat"}
 {"id":"mod-darken-clamp","operation":"modify","input":"#010101","args":{"method":"darken","amount":100},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}

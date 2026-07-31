@@ -375,7 +375,7 @@ func (c *Color) Desaturate(amount float64) *Color {
 func (c *Color) Greyscale() *Color { return c.Desaturate(100) }
 
 func (c *Color) Brighten(amount float64) *Color {
-	delta := float64(mathRound(255 * amount / 100))
+	delta := float64(-mathRound(-255 * amount / 100))
 	c.model.R = clampChannel(c.model.R + delta)
 	c.model.G = clampChannel(c.model.G + delta)
 	c.model.B = clampChannel(c.model.B + delta)
