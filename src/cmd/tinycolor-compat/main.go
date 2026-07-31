@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"math"
 	"os"
 
 	"github.com/rajeet-04/tinycolor-go/internal/compat"
@@ -37,7 +38,7 @@ func handle(request compat.Request) compat.Response {
 		color, err = tinycolor.FromCompat(request.Input, false)
 	case "fromRatio":
 		color, err = tinycolor.FromCompat(request.Input, true)
-	case "output", "analysis", "clone":
+	case "output", "analysis", "clone", "modify", "mix":
 		color, err = tinycolor.FromCompatWithOptions(request.Input, false, options(args))
 	case "equals", "randomInvariant":
 	default:
@@ -60,6 +61,10 @@ func handle(request compat.Request) compat.Response {
 	case "clone":
 		response, _ := compat.Success(request.ID, color.Clone().Inspect())
 		return response
+	case "modify":
+		return modify(request.ID, &color, args)
+	case "mix":
+		return mix(request.ID, color, args)
 	case "equals":
 		response, _ := compat.Success(request.ID, tinycolor.Equals(request.Input, args["other"]))
 		return response
@@ -75,6 +80,67 @@ func handle(request compat.Request) compat.Response {
 	}
 	response, _ := compat.Success(request.ID, color.Inspect())
 	return response
+}
+
+func modify(id string, color *tinycolor.Color, args map[string]any) compat.Response {
+	before := color.Inspect()
+	method, _ := args["method"].(string)
+	var returned *tinycolor.Color
+	switch method {
+	case "lighten":
+		returned = color.Lighten(defaultAmount(args, 10))
+	case "brighten":
+		returned = color.Brighten(defaultAmount(args, 10))
+	case "darken":
+		returned = color.Darken(defaultAmount(args, 10))
+	case "saturate":
+		returned = color.Saturate(defaultAmount(args, 10))
+	case "desaturate":
+		returned = color.Desaturate(defaultAmount(args, 10))
+	case "greyscale":
+		returned = color.Greyscale()
+	case "spin":
+		if _, ok := args["amount"]; ok {
+			returned = color.Spin(number(args["amount"]))
+		} else {
+			returned = color.Spin(math.NaN())
+		}
+	default:
+		response, _ := compat.Failure(id, "unsupported method")
+		return response
+	}
+	response, _ := compat.Success(id, map[string]any{
+		"before":       before,
+		"after":        color.Inspect(),
+		"sameReceiver": returned == color,
+	})
+	return response
+}
+
+func mix(id string, first tinycolor.Color, args map[string]any) compat.Response {
+	second, err := tinycolor.FromCompat(args["other"], false)
+	if err != nil {
+		response, _ := compat.Failure(id, err.Error())
+		return response
+	}
+	response, _ := compat.Success(id, tinycolor.Mix(first, second, defaultAmount(args, 50)).Inspect())
+	return response
+}
+
+func defaultAmount(args map[string]any, fallback float64) float64 {
+	if value, ok := args["amount"]; ok {
+		amount := number(value)
+		if amount == 0 {
+			return 0
+		}
+		return amount
+	}
+	return fallback
+}
+
+func number(value any) float64 {
+	amount, _ := value.(float64)
+	return amount
 }
 
 func options(args map[string]any) tinycolor.CompatOptions {
