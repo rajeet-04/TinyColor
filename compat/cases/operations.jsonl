@@ -15,6 +15,7 @@
 {"id":"mod-saturate-normal","operation":"modify","input":"#808040","args":{"method":"saturate","amount":20},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
 {"id":"mod-saturate-zero","operation":"modify","input":"#808040","args":{"method":"saturate","amount":0},"owner":"C-mrashis","suspectedPackage":"compat"}
 {"id":"mod-saturate-clamp","operation":"modify","input":"#808040","args":{"method":"saturate","amount":100},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
+{"id":"mod-saturate-negative-rounding","operation":"modify","input":"#400140","args":{"method":"saturate","amount":-100},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
 {"id":"mod-saturate-alpha","operation":"modify","input":"#80804080","args":{"method":"saturate","amount":20},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
 {"id":"mod-desaturate-normal","operation":"modify","input":"#804020","args":{"method":"desaturate","amount":20},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
 {"id":"mod-desaturate-zero","operation":"modify","input":"#804020","args":{"method":"desaturate","amount":0},"owner":"C-mrashis","suspectedPackage":"compat"}

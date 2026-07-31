@@ -95,6 +95,13 @@ func TestModifiers(t *testing.T) {
 	}
 }
 
+func TestSaturateMatchesObjectConversionRounding(t *testing.T) {
+	color, _ := FromCompat("#400140", false)
+	if got := color.Saturate(-100).ToHexString(); got != "#202020" {
+		t.Fatalf("Saturate(-100) = %s", got)
+	}
+}
+
 func TestMix(t *testing.T) {
 	black, _ := FromCompat("#000", false)
 	white, _ := FromCompat("#fff", false)
