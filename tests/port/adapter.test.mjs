@@ -88,3 +88,26 @@ assert.equal(readableInvalid.result, true);
 assert.equal(fallback.result.value, "#000000");
 assert.equal(fallbackDisabled.result.value, "#777777");
 assert.equal(emptyCandidates.result, null);
+
+const [complement, splitComplement, triad, tetrad, analogous, analogousZero, monochromatic, monochromaticZero, badPalette] = run([
+  '{"id":"complement","operation":"palette","input":"red","args":{"method":"complement"}}',
+  '{"id":"split-complement","operation":"palette","input":"red","args":{"method":"splitcomplement"}}',
+  '{"id":"triad","operation":"palette","input":"red","args":{"method":"triad"}}',
+  '{"id":"tetrad","operation":"palette","input":"red","args":{"method":"tetrad"}}',
+  '{"id":"analogous","operation":"palette","input":"red","args":{"method":"analogous"}}',
+  '{"id":"analogous-zero","operation":"palette","input":"red","args":{"method":"analogous","results":0,"slices":0}}',
+  '{"id":"monochromatic","operation":"palette","input":"red","args":{"method":"monochromatic"}}',
+  '{"id":"monochromatic-zero","operation":"palette","input":"red","args":{"method":"monochromatic","results":0}}',
+  '{"id":"bad-palette","operation":"palette","input":"red","args":{"method":"unknown"}}',
+].join("\n"));
+
+const paletteValues = (response) => response.result.map((color) => color.value);
+assert.deepEqual(paletteValues(complement), ["#00ffff"]);
+assert.deepEqual(paletteValues(splitComplement), ["red", "#ccff00", "#0066ff"]);
+assert.deepEqual(paletteValues(triad), ["red", "#00ff00", "#0000ff"]);
+assert.deepEqual(paletteValues(tetrad), ["red", "#80ff00", "#00ffff", "#7f00ff"]);
+assert.deepEqual(paletteValues(analogous), ["red", "#ff0066", "#ff0033", "#ff0000", "#ff3300", "#ff6600"]);
+assert.deepEqual(paletteValues(analogousZero), paletteValues(analogous));
+assert.deepEqual(paletteValues(monochromatic), ["#ff0000", "#2a0000", "#550000", "#800000", "#aa0000", "#d40000"]);
+assert.deepEqual(paletteValues(monochromaticZero), paletteValues(monochromatic));
+assert.deepEqual(badPalette, { id: "bad-palette", error: "unsupported method" });
