@@ -7,6 +7,7 @@ const inspect = (color) => ({
   alpha: color.getAlpha(),
   rgb: color.toRgb(),
   value: color.toString(),
+  original: color.getOriginalInput(),
 });
 
 const respond = (id, result, error) => {

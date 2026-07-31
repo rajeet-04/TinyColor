@@ -19,6 +19,7 @@ assert.deepEqual(success, {
     alpha: 1,
     rgb: { r: 255, g: 0, b: 0, a: 1 },
     value: "red",
+    original: "red",
   },
 });
 
