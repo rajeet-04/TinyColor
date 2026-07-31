@@ -57,6 +57,7 @@ until a remote run is observed.
 - `02f9ced` `build(05-01): add reproducible verification gate`
 - `a4ad85e` `fix(05-01): make verification gate portable`
 - `bc91502` `ci(05-01): verify port and source suite`
+- `57e1114` `fix(05-01): close delivery review gaps`
 
 ## Deviations from Plan
 
@@ -65,6 +66,8 @@ until a remote run is observed.
 - The pre-existing unformatted `src/tinycolor/color_test.go` was formatted in
   the portability fix because the new non-mutating format gate correctly
   blocked completion.
+- Final review added manifest absolute/traversal containment, wired verifier
+  regressions into `make verify`, and aligned usage text with `tinycolor`.
 
 ## Known External Checks
 
