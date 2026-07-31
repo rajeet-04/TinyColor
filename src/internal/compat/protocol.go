@@ -13,13 +13,14 @@ type Request struct {
 }
 
 type Response struct {
-	ID     string `json:"id"`
-	Result any    `json:"result,omitempty"`
-	Error  string `json:"error,omitempty"`
+	ID        string `json:"id"`
+	Result    any    `json:"-"`
+	Error     string `json:"-"`
+	hasResult bool
 }
 
 func Success(id string, result any) (Response, error) {
-	response := Response{ID: id, Result: result}
+	response := Response{ID: id, Result: result, hasResult: true}
 	return response, response.Validate()
 }
 
@@ -29,10 +30,26 @@ func Failure(id, message string) (Response, error) {
 }
 
 func (r Response) Validate() error {
-	if (r.Result == nil) == (r.Error == "") {
+	if r.hasResult == (r.Error != "") {
 		return fmt.Errorf("response must contain exactly one of result or error")
 	}
 	return nil
+}
+
+func (r Response) MarshalJSON() ([]byte, error) {
+	if err := r.Validate(); err != nil {
+		return nil, err
+	}
+	if r.hasResult {
+		return json.Marshal(struct {
+			ID     string `json:"id"`
+			Result any    `json:"result"`
+		}{r.ID, r.Result})
+	}
+	return json.Marshal(struct {
+		ID    string `json:"id"`
+		Error string `json:"error"`
+	}{r.ID, r.Error})
 }
 
 func Decode(line []byte) (Request, error) {
