@@ -35,9 +35,12 @@ created: 2026-08-01
 | 05-01-01 | 01 | 1 | DEL-01 | CLI unit | `go -C src test ./cmd/tinycolor-compat` | ✅ | ⬜ pending |
 | 05-01-02 | 01 | 1 | QLT-03 | integration | `make build && make verify` | ✅ make / ❌ expanded targets | ⬜ pending |
 | 05-02-01 | 02 | 2 | DEL-01 | differential fuzz | `node fuzz/harness.mjs --duration 1 --seed 1` | ❌ Wave 2 | ⬜ pending |
-| 05-02-02 | 02 | 2 | DEL-01 | benchmark smoke | `node bench/run.mjs --quick` | ❌ Wave 2 | ⬜ pending |
+| 05-02-02 | 02 | 2 | DEL-01 | fuzz evidence | `node --test fuzz/validate-log.test.mjs && node fuzz/validate-log.mjs fuzz/log.txt` | ❌ Wave 2 | ⬜ pending |
+| 05-02-03 | 02 | 2 | DEL-01 | benchmark smoke | `node bench/run.mjs --quick --output <temp>` | ❌ Wave 2 | ⬜ pending |
 | 05-03-01 | 03 | 3 | DEL-01 | evidence audit | `node tests/original/verify.mjs` | ❌ Wave 1 | ⬜ pending |
 | 05-03-02 | 03 | 3 | QLT-03 | full gate | `make verify` | ✅ make / ❌ expanded target | ⬜ pending |
+| 05-03-04 | 03 | 3 | DEL-01 | external checkpoint | public clone + exact CI run URL | manual | ⬜ pending |
+| 05-03-05 | 03 | 3 | QLT-03 | closeout audit | `git diff --check` | ✅ | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
