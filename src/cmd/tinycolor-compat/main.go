@@ -201,10 +201,10 @@ func runContrast(args []string, stdout, stderr io.Writer) int {
 
 func usage(stderr io.Writer, command string) {
 	if command == "" {
-		fmt.Fprintln(stderr, "Usage: tinycolor-compat <parse|convert|lighten|palette|contrast>")
+		fmt.Fprintln(stderr, "Usage: tinycolor <parse|convert|lighten|palette|contrast>")
 		return
 	}
-	fmt.Fprintln(stderr, "Usage: tinycolor-compat "+command)
+	fmt.Fprintln(stderr, "Usage: tinycolor "+command)
 }
 
 func writeJSON(stdout io.Writer, value any) int {
