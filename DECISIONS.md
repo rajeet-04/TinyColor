@@ -18,3 +18,4 @@
 | D-014 | Normalize benchmark workload newlines before hashing. | Evidence hashes remain stable across Windows and Unix checkouts without changing request content. | Accepted |
 | D-015 | Publish unsupported or external deliverables as unverified. | Honest missing evidence is preferable to unreproducible CI, public-access, or video claims. | Accepted |
 | D-016 | Return an empty typed Go palette for non-positive counts instead of reproducing TinyColor's non-terminating negative `analogous` loop. | Compatibility must not make a public Go call hang indefinitely; adapter zero values still retain TinyColor's documented defaults. | Accepted |
+| D-017 | Run a byte-identical copy of `test.js` through a test-only synchronous facade that invokes the native Go binary. | This executes the original assertions against the port without editing kickoff files, copying color algorithms into JavaScript, or adding a second WebAssembly implementation. | Accepted |

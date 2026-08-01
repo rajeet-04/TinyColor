@@ -23,8 +23,14 @@ invariants rather than exact equality between independent random generators.
 ## Source suite and oracle integrity
 
 - `node tests/original/verify.mjs`: 3/3 kickoff hashes verified.
-- `deno test test.js`: 45 passed, 0 failed, 1 ignored.
+- `deno test test.js`: 45 passed, 0 failed, 1 ignored against the source oracle.
+- `node tests/original-go/run.mjs`: 45 passed, 0 failed, 1 ignored against the
+  native Go binary using a byte-identical temporary copy of `test.js`.
 - The ignored `polyad` test is also ignored by the pinned upstream suite.
+
+The Go-backed facade preserves JavaScript constructor identity, mutation, and
+chaining required by the original assertions. It does not import the source
+implementation or contain TinyColor color algorithms.
 
 ## Go coverage and safety
 
@@ -65,9 +71,9 @@ observations, not universal speedup claims.
 
 - Differential Fuzz Survivor: eligible from the validated 60-second log.
 - Zero Unsafe: eligible from zero Go source occurrences.
-- Decision Log: eligible from 15 substantive decisions.
-- GitHub Actions: [run 30686980719](https://github.com/rajeet-04/TinyColor/actions/runs/30686980719) passed the full gate, Deno, build, and artifact upload for commit `1c218b6`.
-- Public repository visibility: unauthenticated `git ls-remote https://github.com/rajeet-04/TinyColor.git refs/heads/rajeet` returned exact commit `1c218b6`.
+- Decision Log: eligible from 17 substantive decisions.
+- GitHub Actions: [`rajeet` branch runs](https://github.com/rajeet-04/TinyColor/actions?query=branch%3Arajeet) execute the full gate, source-oracle Deno suite, build, and artifact upload.
+- Public repository: https://github.com/rajeet-04/TinyColor.
 - Five-minute demo video: not supplied.
 
 No known mismatch remains in the fixed corpus or recorded fuzz session.
