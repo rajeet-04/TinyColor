@@ -113,6 +113,16 @@ func TestRunJSONLAndUsageErrors(t *testing.T) {
 			wantStdout: "{\"id\":\"red\",\"result\":{\"alpha\":1,\"format\":\"name\",\"original\":\"red\",\"rgb\":{\"a\":1,\"b\":0,\"g\":0,\"r\":255},\"valid\":true,\"value\":\"red\"}}\n",
 		},
 		{
+			name:       "JSONL string forwards explicit format",
+			stdin:      "{\"id\":\"string-format\",\"operation\":\"string\",\"input\":\"red\",\"args\":{\"format\":\"hsl\"}}\n",
+			wantStdout: "{\"id\":\"string-format\",\"result\":\"hsl(0, 100%, 50%)\"}\n",
+		},
+		{
+			name:       "JSONL inspect preserves one-percent HSL channels",
+			stdin:      "{\"id\":\"hsl-one-percent\",\"operation\":\"inspect\",\"input\":\"hsl(115, 1%, 1%)\"}\n",
+			wantStdout: "{\"id\":\"hsl-one-percent\",\"result\":{\"alpha\":1,\"format\":\"hsl\",\"original\":\"hsl(115, 1%, 1%)\",\"rgb\":{\"a\":1,\"b\":3,\"g\":3,\"r\":3},\"valid\":true,\"value\":\"hsl(115, 1%, 1%)\"}}\n",
+		},
+		{
 			name:  "malformed JSONL request does not stop the stream",
 			stdin: "{bad json\n{\"id\":\"red\",\"operation\":\"inspect\",\"input\":\"red\"}\n",
 			verify: func(t *testing.T, output string) {
