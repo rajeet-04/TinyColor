@@ -132,6 +132,61 @@ func TestRunJSONLAndUsageErrors(t *testing.T) {
 			args:       []string{"bridge", `{"id":"bridge-red","operation":"output","input":"red","args":{"method":"toHexString"}}`},
 			wantStdout: "{\"id\":\"bridge-red\",\"result\":\"#ff0000\"}\n",
 		},
+		{
+			name:       "bridge RGB object",
+			args:       []string{"bridge", `{"id":"rgb","operation":"output","input":"red","args":{"method":"toRgb"}}`},
+			wantStdout: "{\"id\":\"rgb\",\"result\":{\"a\":1,\"b\":0,\"g\":0,\"r\":255}}\n",
+		},
+		{
+			name:       "bridge percentage RGB object",
+			args:       []string{"bridge", `{"id":"prgb","operation":"output","input":"red","args":{"method":"toPercentageRgb"}}`},
+			wantStdout: "{\"id\":\"prgb\",\"result\":{\"a\":1,\"b\":\"0%\",\"g\":\"0%\",\"r\":\"100%\"}}\n",
+		},
+		{
+			name:       "bridge HSL object",
+			args:       []string{"bridge", `{"id":"hsl","operation":"output","input":"red","args":{"method":"toHsl"}}`},
+			wantStdout: "{\"id\":\"hsl\",\"result\":{\"a\":1,\"h\":0,\"l\":0.5,\"s\":1}}\n",
+		},
+		{
+			name:       "bridge HSV object",
+			args:       []string{"bridge", `{"id":"hsv","operation":"output","input":"red","args":{"method":"toHsv"}}`},
+			wantStdout: "{\"id\":\"hsv\",\"result\":{\"a\":1,\"h\":0,\"s\":1,\"v\":1}}\n",
+		},
+		{
+			name:       "bridge compact hex",
+			args:       []string{"bridge", `{"id":"compact","operation":"output","input":"red","args":{"method":"toHexString","compact":true}}`},
+			wantStdout: "{\"id\":\"compact\",\"result\":\"#f00\"}\n",
+		},
+		{
+			name:       "bridge explicit hex4",
+			args:       []string{"bridge", `{"id":"hex4","operation":"output","input":"rgba(255, 0, 0, 0.6)","args":{"method":"toString","format":"hex4"}}`},
+			wantStdout: "{\"id\":\"hex4\",\"result\":\"#f009\"}\n",
+		},
+		{
+			name:       "bridge alpha mutation",
+			args:       []string{"bridge", `{"id":"alpha","operation":"setAlpha","input":"red","args":{"value":0.5}}`},
+			wantStdout: "{\"id\":\"alpha\",\"result\":{\"alpha\":0.5,\"format\":\"name\",\"original\":\"red\",\"rgb\":{\"a\":0.5,\"b\":0,\"g\":0,\"r\":255},\"valid\":true,\"value\":\"rgba(255, 0, 0, 0.5)\"}}\n",
+		},
+		{
+			name: "bridge random snapshot",
+			args: []string{"bridge", `{"id":"random","operation":"random"}`},
+			verify: func(t *testing.T, output string) {
+				t.Helper()
+				if !strings.Contains(output, `"format":"prgb"`) || !strings.Contains(output, `"valid":true`) {
+					t.Fatalf("stdout = %q", output)
+				}
+			},
+		},
+		{
+			name: "bridge Go-owned names",
+			args: []string{"bridge", `{"id":"names","operation":"names"}`},
+			verify: func(t *testing.T, output string) {
+				t.Helper()
+				if !strings.Contains(output, `"red":"f00"`) || !strings.Contains(output, `"rebeccapurple":"663399"`) {
+					t.Fatalf("stdout = %q", output)
+				}
+			},
+		},
 		{name: "missing bridge request", args: []string{"bridge"}, wantStatus: 2},
 		{
 			name:       "malformed bridge request",

@@ -42,6 +42,17 @@ func TestAllSourceNamesParse(t *testing.T) {
 	}
 }
 
+func TestNamesReturnsIndependentCopy(t *testing.T) {
+	first := Names()
+	if first["red"] != "f00" {
+		t.Fatalf("red = %q", first["red"])
+	}
+	first["red"] = "broken"
+	if second := Names(); second["red"] != "f00" {
+		t.Fatalf("mutated red = %q", second["red"])
+	}
+}
+
 func TestOriginalAndFromRatio(t *testing.T) {
 	object := map[string]any{"r": float64(1), "g": float64(0), "b": float64(0), "a": float64(.5)}
 	ratio := ParseFromRatio(object)

@@ -18,8 +18,26 @@ func TestOutputsAndAnalysis(t *testing.T) {
 	if !Equals("#ff000066", "rgba(255, 0, 0, .4)") {
 		t.Fatal("equals")
 	}
-	if !Random().Valid() {
-		t.Fatal("random")
+	if random := Random(); !random.Valid() || random.Format() != "prgb" {
+		t.Fatalf("random = valid %t, format %q", random.Valid(), random.Format())
+	}
+}
+
+func TestSetAlphaMatchesTinyColorBounds(t *testing.T) {
+	color, _ := FromCompat("red", false)
+	for _, test := range []struct {
+		value any
+		want  float64
+	}{
+		{0.9, 0.9},
+		{-1.0, 1},
+		{2.0, 1},
+		{nil, 1},
+		{"test", 1},
+	} {
+		if returned := color.SetAlpha(test.value); returned != &color || color.Alpha() != test.want {
+			t.Fatalf("SetAlpha(%#v) returned %p, alpha %v", test.value, returned, color.Alpha())
+		}
 	}
 }
 

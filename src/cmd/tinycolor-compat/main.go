@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"github.com/rajeet-04/tinycolor-go/internal/compat"
+	"github.com/rajeet-04/tinycolor-go/internal/parser"
 	"github.com/rajeet-04/tinycolor-go/tinycolor"
 )
 
@@ -240,9 +241,9 @@ func handle(request compat.Request) compat.Response {
 		format, _ := args["format"].(string)
 		gradientType, _ := args["gradientType"].(bool)
 		color, err = tinycolor.FromCompatWithOptions(request.Input, true, tinycolor.CompatOptions{Format: format, GradientType: gradientType})
-	case "output", "analysis", "clone", "modify", "mix", "readability", "isReadable", "mostReadable", "palette":
+	case "output", "analysis", "clone", "modify", "mix", "readability", "isReadable", "mostReadable", "palette", "setAlpha":
 		color, err = tinycolor.FromCompatWithOptions(request.Input, false, options(args))
-	case "equals", "randomInvariant":
+	case "equals", "randomInvariant", "random", "names":
 	default:
 		response, _ := compat.Failure(request.ID, "unsupported operation")
 		return response
@@ -276,6 +277,10 @@ func handle(request compat.Request) compat.Response {
 		return mostReadable(request.ID, color, args)
 	case "palette":
 		return palette(request.ID, color, args)
+	case "setAlpha":
+		color.SetAlpha(args["value"])
+		response, _ := compat.Success(request.ID, color.Inspect())
+		return response
 	case "equals":
 		response, _ := compat.Success(request.ID, tinycolor.Equals(request.Input, args["other"]))
 		return response
@@ -287,6 +292,12 @@ func handle(request compat.Request) compat.Response {
 			"alpha":      float64(1),
 			"rgbInRange": rgb.R >= 0 && rgb.R <= 255 && rgb.G >= 0 && rgb.G <= 255 && rgb.B >= 0 && rgb.B <= 255,
 		})
+		return response
+	case "random":
+		response, _ := compat.Success(request.ID, tinycolor.Random().Inspect())
+		return response
+	case "names":
+		response, _ := compat.Success(request.ID, parser.Names())
 		return response
 	}
 	response, _ := compat.Success(request.ID, color.Inspect())
@@ -498,14 +509,26 @@ func analysis(id string, color tinycolor.Color, method any) compat.Response {
 func output(id string, color tinycolor.Color, args map[string]any) compat.Response {
 	var result any
 	switch args["method"] {
+	case "toRgb":
+		rgb := color.ToRGB()
+		result = map[string]any{"r": rgb.R, "g": rgb.G, "b": rgb.B, "a": rgb.A}
+	case "toPercentageRgb":
+		rgb := color.ToPercentageRGB()
+		result = map[string]any{"r": fmt.Sprintf("%d%%", rgb.R), "g": fmt.Sprintf("%d%%", rgb.G), "b": fmt.Sprintf("%d%%", rgb.B), "a": rgb.A}
+	case "toHsl":
+		hsl := color.ToHSL()
+		result = map[string]any{"h": hsl.H, "s": hsl.S, "l": hsl.L, "a": hsl.A}
+	case "toHsv":
+		hsv := color.ToHSV()
+		result = map[string]any{"h": hsv.H, "s": hsv.S, "v": hsv.V, "a": hsv.A}
 	case "toHex":
-		result = color.ToHex()
+		result = compactHex(color.ToHex(), truthy(args["compact"]))
 	case "toHex8":
-		result = color.ToHex8()
+		result = compactHex(color.ToHex8(), truthy(args["compact"]))
 	case "toHexString":
-		result = color.ToHexString()
+		result = "#" + compactHex(color.ToHex(), truthy(args["compact"]))
 	case "toHex8String":
-		result = color.ToHex8String()
+		result = "#" + compactHex(color.ToHex8(), truthy(args["compact"]))
 	case "toRgbString":
 		result = color.ToRGBString()
 	case "toPercentageRgbString":
@@ -516,7 +539,14 @@ func output(id string, color tinycolor.Color, args map[string]any) compat.Respon
 		result = color.ToHSVString()
 	case "toString":
 		format, _ := args["format"].(string)
-		result = color.ToString(format)
+		switch format {
+		case "hex3":
+			result = "#" + compactHex(color.ToHex(), true)
+		case "hex4":
+			result = "#" + compactHex(color.ToHex8(), true)
+		default:
+			result = color.ToString(format)
+		}
 	case "toName":
 		name, ok := color.ToName()
 		if ok {
@@ -537,6 +567,20 @@ func output(id string, color tinycolor.Color, args map[string]any) compat.Respon
 	}
 	response, _ := compat.Success(id, result)
 	return response
+}
+
+func compactHex(hex string, enabled bool) string {
+	if !enabled || (len(hex) != 6 && len(hex) != 8) {
+		return hex
+	}
+	compact := make([]byte, 0, len(hex)/2)
+	for index := 0; index < len(hex); index += 2 {
+		if hex[index] != hex[index+1] {
+			return hex
+		}
+		compact = append(compact, hex[index])
+	}
+	return string(compact)
 }
 
 func truthy(value any) bool {

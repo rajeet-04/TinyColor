@@ -63,6 +63,10 @@ func (c Color) Valid() bool    { return c.model.Valid }
 func (c Color) Format() string { return string(c.model.Format) }
 func (c Color) Alpha() float64 { return c.model.A }
 func (c Color) Original() any  { return c.model.Original }
+func (c *Color) SetAlpha(value any) *Color {
+	c.model.A = color.BoundAlpha(value)
+	return c
+}
 func (c Color) RGB() map[string]any {
 	return map[string]any{"r": math.Round(c.model.R), "g": math.Round(c.model.G), "b": math.Round(c.model.B), "a": c.model.A}
 }
@@ -258,7 +262,7 @@ func jsTruthy(value any) bool {
 	}
 }
 func Random() Color {
-	return Color{model: color.Model{R: rand.Float64() * 255, G: rand.Float64() * 255, B: rand.Float64() * 255, A: 1, Valid: true, Format: color.FormatRGB}}
+	return Color{model: color.Model{R: rand.Float64() * 255, G: rand.Float64() * 255, B: rand.Float64() * 255, A: 1, Valid: true, Format: color.FormatPRGB}}
 }
 func mathRound(v float64) int {
 	floor := math.Floor(v)
