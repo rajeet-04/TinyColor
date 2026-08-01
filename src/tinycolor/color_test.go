@@ -102,3 +102,13 @@ func TestInvalidInputIsAColorState(t *testing.T) {
 		t.Fatalf("invalid input = %#v, %v", color, err)
 	}
 }
+
+func TestCompressibleSixDigitNameFallsBackToHex(t *testing.T) {
+	color, _ := FromCompat("rebeccapurple", false)
+	if name, ok := color.ToName(); ok || name != "" {
+		t.Fatalf("ToName() = %q, %t", name, ok)
+	}
+	if color.String() != "#663399" || color.Clone().String() != "#663399" {
+		t.Fatalf("color = %q, clone = %q", color.String(), color.Clone().String())
+	}
+}

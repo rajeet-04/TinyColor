@@ -19,25 +19,25 @@ var (
 	hexNames = func() map[string]string {
 		result := make(map[string]string)
 		for name, sourceHex := range names {
-			hex := sourceHex
-			if len(hex) == 3 {
-				hex = string([]byte{hex[0], hex[0], hex[1], hex[1], hex[2], hex[2]})
-			}
-			result[hex] = name
+			result[sourceHex] = name
 		}
-		result["00ffff"] = "cyan"
-		result["ff00ff"] = "magenta"
+		result["0ff"] = "cyan"
+		result["f0f"] = "magenta"
 		result["808080"] = "grey"
 		result["a9a9a9"] = "darkgrey"
 		result["2f4f4f"] = "darkslategrey"
 		result["696969"] = "dimgrey"
 		result["d3d3d3"] = "lightgrey"
-		result["778899"] = "lightslategrey"
+		result["789"] = "lightslategrey"
 		result["708090"] = "slategrey"
 		return result
 	}()
 )
 
 func NameForRGB(r, g, b int) string {
-	return hexNames[fmt.Sprintf("%02x%02x%02x", r, g, b)]
+	hex := fmt.Sprintf("%02x%02x%02x", r, g, b)
+	if hex[0] == hex[1] && hex[2] == hex[3] && hex[4] == hex[5] {
+		hex = string([]byte{hex[0], hex[2], hex[4]})
+	}
+	return hexNames[hex]
 }
