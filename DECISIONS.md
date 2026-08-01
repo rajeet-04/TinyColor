@@ -8,4 +8,5 @@
 | D-004 | Use JSON Lines adapters over stdin/stdout. | Node and Go can compare dynamic inputs and operations without modifying source tests. | Accepted |
 | D-005 | Use Go standard library first. | The port's algorithms are small and self-contained; dependencies add compatibility and supply-chain surface. | Accepted |
 | D-006 | Preserve source quirks at the adapter boundary; expose an idiomatic Go API separately. | Compatibility and Go usability are both required, but they should not leak dynamic JavaScript semantics into every caller. | Accepted |
-| D-007 | Deno's source suite is a required later check, not a current pass. | `deno` is not installed in the checked environment as of 2026-08-01. | Accepted |
+| D-007 | Run the immutable Deno source suite explicitly as `deno test test.js`. | Deno 2 broad discovery includes generated npm and Node port tests outside the pinned source suite. | Accepted |
+| D-008 | Use a finite V8-derived luminance transfer table. | TinyColor rounds RGB to 8-bit channels before luminance, while Go `math.Pow` differs from V8 for 93 nonlinear values; the table preserves exact parity without tolerance. | Accepted |

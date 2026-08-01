@@ -147,12 +147,6 @@ func TestReadability(t *testing.T) {
 func TestReadabilityMatchesJavaScriptPrecision(t *testing.T) {
 	first, _ := FromCompat(map[string]any{"r": 127.0, "g": 64.0, "b": 15.0, "a": 0.0}, false)
 	second, _ := FromCompat("#80007f", false)
-	for _, channel := range []float64{128, 127} {
-		normalized := channel / 255
-		base := (normalized + .055) / 1.055
-		linear := math.Pow(base, 2.4)
-		t.Logf("channel %.0f normalized %.17g pow %.17g/%x exp-log %.17g/%x exp2-log2 %.17g/%x", channel, normalized, linear, math.Float64bits(linear), math.Exp(2.4*math.Log(base)), math.Float64bits(math.Exp(2.4*math.Log(base))), math.Exp2(2.4*math.Log2(base)), math.Float64bits(math.Exp2(2.4*math.Log2(base))))
-	}
 	if got := Readability(first, second); got != 1.188086751976723 {
 		t.Fatalf("Readability precision = %.17g", got)
 	}
@@ -281,6 +275,14 @@ func TestPaletteCustomizationsAndIndependence(t *testing.T) {
 	triad[1].Spin(30)
 	if transparent.ToHexString() != "#ff0000" || triad[2].ToHexString() != "#0000ff" {
 		t.Fatal("palette result mutation changed the source or another result")
+	}
+}
+
+func TestPaletteConversionUsesTinyColorChannelBounds(t *testing.T) {
+	color, _ := FromCompat("rgb(127, 0, 255)", false)
+	converted := color.Tetrad()[1]
+	if got := converted.ToHSLString(); got != "hsl(0, 100%, 50%)" {
+		t.Fatalf("tetrad wrapped hue = %s", got)
 	}
 }
 
