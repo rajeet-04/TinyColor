@@ -21,6 +21,7 @@
   operations 71/71; 164/164 total and zero mismatches.
 - Go tests/vet and 15 Node tests pass.
 - Immutable Deno source suite: 45 passed, 0 failed, 1 ignored.
+- Byte-identical original suite against native Go: 45 passed, 0 failed, 1 ignored.
 - Differential fuzz evidence: 60.012 seconds, seed 20260801, 1,091,630 cases,
   zero divergences.
 - Shared benchmark: 20 cold starts and 1,000 persistent requests per runtime,
@@ -33,6 +34,8 @@
 - Apply TinyColor's sub-one RGB rounding once at the `FromCompat` boundary.
 - Keep fuzz comparisons exact and normalize benchmark workload newlines before hashing.
 - Never claim external evidence until public access and exact-commit CI are observed.
+- Use a test-only synchronous facade to run unchanged source assertions against
+  the native Go binary without duplicating TinyColor algorithms.
 
 ## Session Continuity
 

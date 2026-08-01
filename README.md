@@ -2,9 +2,9 @@
 
 An idiomatic Go port of the behavior in the pinned
 [`bgrins/TinyColor`](https://github.com/bgrins/TinyColor) checkout. The
-JavaScript source remains in this repository as an immutable oracle; exact
-JSONL differential checks demonstrate compatibility rather than modifying the
-source tests.
+JavaScript source remains in this repository as an immutable oracle. Exact
+JSONL differential checks and a byte-identical original-suite runner exercise
+the compiled Go port without modifying the source tests.
 
 Source commit: `b49018c9f2dbca313d80d7a4dad25e26143cfe01`. TinyColor and this port retain
 Brian Grinstead's MIT license in [`LICENSE`](LICENSE). The original JavaScript
@@ -65,13 +65,16 @@ func main() {
 
 ```sh
 make verify
+node tests/original-go/run.mjs
 deno test test.js
 ```
 
 `make verify` checks formatting, the three kickoff hashes in
 [`tests/original/manifest.sha256`](tests/original/manifest.sha256), Node and Go
-tests, all fixed differential corpora, the recorded fuzz log, and `go vet`.
-The untouched Deno suite is a separate source-oracle check.
+tests, all fixed differential corpora, the recorded fuzz log, the byte-identical
+original suite against Go, and `go vet`. The direct Deno command separately
+checks the untouched source oracle. Both original-suite runs report 45 passed,
+0 failed, and the same upstream `polyad` test ignored.
 
 Evidence:
 
@@ -80,13 +83,14 @@ Evidence:
 - [Benchmark results](bench/results.json) and [methodology](bench/methodology.md) — same-host startup p99, latency p99, throughput, and peak RSS.
 - [Architectural decisions](DECISIONS.md), [architecture](docs/ARCHITECTURE.md), [testing](docs/TESTING.md), and [team ownership](docs/TEAM-OWNERSHIP.md).
 - [Five-minute demo script](docs/DEMO.md).
-- [Successful exact-commit CI run](https://github.com/rajeet-04/TinyColor/actions/runs/30686980719).
+- [GitHub Actions runs for `rajeet`](https://github.com/rajeet-04/TinyColor/actions?query=branch%3Arajeet).
 
 ## Repository layout
 
 ```text
 src/             Go module, public API, and CLI
 tests/original/  kickoff hash manifest and verifier
+tests/original-go/ byte-identical suite runner and test-only Go facade
 tests/port/      port-owned adapter tests
 compat/          JSONL oracle, driver, and fixed corpora
 fuzz/            differential harness and 60-second log
@@ -109,7 +113,7 @@ docs/            architecture, testing, ownership, and demo guide
 
 - [x] Public source URL and pinned kickoff commit recorded.
 - [x] One-command native and Docker builds documented.
-- [x] Immutable oracle hashes and source suite verified.
+- [x] Immutable oracle hashes and byte-identical original suite verified against Go.
 - [x] Exact fixed-corpus and 60-second differential evidence published.
 - [x] Same-host benchmark methodology and results published.
 - [x] Decisions, ownership, limitations, and demo script documented.
