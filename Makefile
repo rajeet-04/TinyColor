@@ -1,4 +1,4 @@
-.PHONY: build test verify fmt-check hashes fuzz bench clean
+.PHONY: build test test-original-go verify fmt-check hashes fuzz bench clean
 
 GOCACHE ?= $(CURDIR)/.cache/go-build
 export GOCACHE
@@ -11,7 +11,7 @@ build:
 
 test:
 	node tests/port/adapter.test.mjs
-	node --test tests/original/verify.test.mjs
+	node --test tests/original/verify.test.mjs tests/original-go/run.test.mjs
 	node --test fuzz/harness.test.mjs fuzz/validate-log.test.mjs
 	node fuzz/validate-log.mjs fuzz/log.txt
 	go -C src test ./...
@@ -21,7 +21,10 @@ test:
 	node compat/run.mjs compat/cases/conversion.jsonl
 	node compat/run.mjs compat/cases/operations.jsonl
 
-verify: fmt-check hashes test
+test-original-go:
+	node tests/original-go/run.mjs
+
+verify: fmt-check hashes test test-original-go
 	go -C src vet ./...
 
 fmt-check:
