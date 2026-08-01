@@ -37,6 +37,19 @@ func TestStringHexFilterAndConversion(t *testing.T) {
 	}
 }
 
+func TestPercentageRGBUsesUnroundedChannels(t *testing.T) {
+	c, _ := FromCompat(map[string]any{"h": float64(266), "s": float64(255), "v": float64(342), "a": float64(2.63)}, false)
+	if got := c.ToPercentageRGBString(); got != "rgb(43%, 0%, 100%)" {
+		t.Fatalf("ToPercentageRGBString() = %q", got)
+	}
+}
+
+func TestEqualsRejectsFalsyInput(t *testing.T) {
+	if Equals("", map[string]any{"h": float64(529), "s": float64(15), "l": float64(-77), "a": float64(-1.132)}) {
+		t.Fatal("empty input must not equal normalized black")
+	}
+}
+
 func TestImplicitAlphaHexFallsBackToRGBA(t *testing.T) {
 	for _, input := range []string{"#f008", "#ff000080"} {
 		c, _ := FromCompat(input, false)
