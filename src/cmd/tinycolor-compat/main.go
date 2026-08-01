@@ -237,7 +237,8 @@ func handle(request compat.Request) compat.Response {
 		return response
 	}
 	if request.Operation == "string" {
-		response, _ := compat.Success(request.ID, color.String())
+		format, _ := args["format"].(string)
+		response, _ := compat.Success(request.ID, color.ToString(format))
 		return response
 	}
 	switch request.Operation {

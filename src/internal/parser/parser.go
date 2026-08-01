@@ -172,7 +172,7 @@ func hsvModel(h, s, v, alpha any, hasAlpha bool, original any) color.Model {
 }
 
 func ratio(value any) float64 {
-	if number := color.ParseFloat(value); !math.IsNaN(number) && number <= 1 {
+	if number := color.ParseFloat(value); !color.IsPercentage(value) && !math.IsNaN(number) && number <= 1 {
 		value = formatPercent(number*100) + "%"
 	}
 	return color.Bound01(value, 100)
