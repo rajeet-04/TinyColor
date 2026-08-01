@@ -42,6 +42,7 @@
 {"id":"readability-same","operation":"readability","input":"#000","args":{"other":"#000"},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
 {"id":"readability-low","operation":"readability","input":"#000","args":{"other":"#111"},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
 {"id":"readability-max","operation":"readability","input":"#000","args":{"other":"#fff"},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
+{"id":"readability-object-precision","operation":"readability","input":{"r":127,"g":64,"b":15,"a":0},"args":{"other":"#80007f"},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
 {"id":"readable-aa-small","operation":"isReadable","input":"#ff0088","args":{"other":"#2e0c3a","options":{"level":"AA","size":"small"}},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
 {"id":"readable-aa-large","operation":"isReadable","input":"#ff0088","args":{"other":"#5c1a72","options":{"level":"AA","size":"large"}},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
 {"id":"readable-aaa-small","operation":"isReadable","input":"#db91b8","args":{"other":"#2e0c3a","options":{"level":"AAA","size":"small"}},"owner":"B-xthxr","suspectedPackage":"src/tinycolor"}
