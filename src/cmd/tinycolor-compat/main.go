@@ -224,7 +224,9 @@ func handle(request compat.Request) compat.Response {
 	case "inspect", "string":
 		color, err = tinycolor.FromCompat(request.Input, false)
 	case "fromRatio":
-		color, err = tinycolor.FromCompat(request.Input, true)
+		format, _ := args["format"].(string)
+		gradientType, _ := args["gradientType"].(bool)
+		color, err = tinycolor.FromCompatWithOptions(request.Input, true, tinycolor.CompatOptions{Format: format, GradientType: gradientType})
 	case "output", "analysis", "clone", "modify", "mix", "readability", "isReadable", "mostReadable", "palette":
 		color, err = tinycolor.FromCompatWithOptions(request.Input, false, options(args))
 	case "equals", "randomInvariant":
