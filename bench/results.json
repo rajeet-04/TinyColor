@@ -1,4 +1,27 @@
 {
-  "status": "not_run",
-  "reason": "Benchmarking is scheduled for the delivery phase."
+  "generatedAt": "2026-08-01T05:14:54.744Z",
+  "os": "win32",
+  "architecture": "x64",
+  "cpu": "13th Gen Intel(R) Core(TM) i7-13650HX",
+  "nodeVersion": "v22.19.0",
+  "goVersion": "go version go1.26.5 windows/amd64",
+  "workloadSha256": "3d91bf1f988e4a69173c8413d08ee6ba5b0d4179b9905778e4093da778206f8f",
+  "samples": {
+    "coldStarts": 20,
+    "requests": 1000
+  },
+  "implementations": {
+    "javascript": {
+      "startupP99Ms": 40.0631,
+      "latencyP99Ms": 0.3286,
+      "throughputOpsPerSecond": 7376.09452022562,
+      "peakRssBytes": 38842368
+    },
+    "go": {
+      "startupP99Ms": 8.7813,
+      "latencyP99Ms": 0.1773,
+      "throughputOpsPerSecond": 16438.851581828494,
+      "peakRssBytes": 12046336
+    }
+  }
 }

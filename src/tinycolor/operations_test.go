@@ -147,7 +147,7 @@ func TestReadability(t *testing.T) {
 func TestReadabilityMatchesJavaScriptPrecision(t *testing.T) {
 	first, _ := FromCompat(map[string]any{"r": 127.0, "g": 64.0, "b": 15.0, "a": 0.0}, false)
 	second, _ := FromCompat("#80007f", false)
-	if got := Readability(first, second); got != 1.188086751976723 {
+	if got := Readability(first, second); got != 1.1880867519767233 {
 		t.Fatalf("Readability precision = %.17g", got)
 	}
 }

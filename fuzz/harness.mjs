@@ -246,7 +246,6 @@ async function main() {
     if (summary.divergences) process.exitCode = 1;
   } catch (error) {
     console.error(error.message);
-    printSummary(error.summary ?? { elapsedSeconds: 0, seed: options.seed, cases: 0, divergences: 0 });
     process.exitCode = 1;
   }
 }

@@ -2,3 +2,20 @@ track = "H"
 source_url = "https://github.com/bgrins/TinyColor.git"
 kickoff_commit = "b49018c9f2dbca313d80d7a4dad25e26143cfe01"
 oracle_manifest = "tests/original/manifest.sha256"
+
+[final_evidence]
+go_implementation_lines = 2228
+original_javascript_lines = 1156
+fuzz_duration_seconds = 60.012
+fuzz_seed = 20260801
+differential_vectors = 1091630
+differential_divergences = 0
+benchmark_results = "bench/results.json"
+coverage_report = "bench/coverage.txt"
+
+[coverage]
+cmd_tinycolor_compat = 33.6
+internal_color = 90.5
+internal_compat = 57.1
+internal_parser = 85.8
+tinycolor = 92.8

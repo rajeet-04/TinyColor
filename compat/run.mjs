@@ -12,7 +12,7 @@ const goEnv = { ...process.env, GOCACHE: process.env.GOCACHE ?? resolve(root, ".
 
 function run(command, args, cwd, request) {
   const output = spawnSync(command, args, { cwd, input: `${JSON.stringify(request)}\n`, encoding: "utf8", env: goEnv });
-  if (output.status !== 0) return { id: request.id, error: output.stderr.trim() || `${command} exited ${output.status}` };
+  if (output.status !== 0) return { id: request.id, error: output.stderr?.trim() || output.error?.message || `${command} exited ${output.status}` };
   return JSON.parse(output.stdout.trim());
 }
 

@@ -182,12 +182,29 @@ func (c Color) ToFilter(second *Color, gradient bool) string {
 func (c Color) Brightness() float64 { x := c.ToRGB(); return float64(x.R*299+x.G*587+x.B*114) / 1000 }
 func (c Color) Luminance() float64 {
 	x := c.ToRGB()
-	return .2126*luminanceChannel(x.R) + .7152*luminanceChannel(x.G) + .0722*luminanceChannel(x.B)
+	// Keep the multiplication additions separate. V8 evaluates the source
+	// expression with an observable rounding boundary; a fused Go operation can
+	// otherwise differ by one ULP in readability output.
+	red := roundedProduct(.2126, luminanceChannel(x.R))
+	green := roundedProduct(.7152, luminanceChannel(x.G))
+	blue := roundedProduct(.0722, luminanceChannel(x.B))
+	return red + green + blue
 }
+
+//go:noinline
+func roundedProduct(left, right float64) float64 { return left * right }
 func Readability(first, second Color) float64 {
 	firstLuminance, secondLuminance := first.Luminance(), second.Luminance()
-	return (math.Max(firstLuminance, secondLuminance) + .05) / (math.Min(firstLuminance, secondLuminance) + .05)
+	numerator := roundedSum(math.Max(firstLuminance, secondLuminance), .05)
+	denominator := roundedSum(math.Min(firstLuminance, secondLuminance), .05)
+	return roundedQuotient(numerator, denominator)
 }
+
+//go:noinline
+func roundedSum(left, right float64) float64 { return left + right }
+
+//go:noinline
+func roundedQuotient(numerator, denominator float64) float64 { return numerator / denominator }
 func IsReadable(first, second Color, options WCAG2Options) bool {
 	return isReadableRatio(Readability(first, second), options)
 }

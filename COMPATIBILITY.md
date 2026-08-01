@@ -92,3 +92,21 @@ On 2026-08-01, the fixed operations corpus passed with **69/69 cases** and
 smoke, **26/26** HEX/RGB/name, **23/23** parser, and **35/35** conversion
 cases with zero mismatches. This evidence does not claim a Deno source-suite
 pass because Deno is unavailable locally.
+
+## Final local delivery evidence
+
+Fresh local verification on 2026-08-01 recorded the following fixed-corpus
+results: smoke **9/9**, HEX/RGB/name **26/26**, parser **23/23**, conversion
+**35/35**, and operations **71/71**; every corpus had zero mismatches.
+
+`go -C src test -cover ./...` reported: CLI 33.6%, `internal/color` 90.5%,
+`internal/compat` 57.1%, `internal/parser` 85.8%, and `tinycolor` 92.8%.
+No JavaScript coverage equivalence is claimed.
+
+The checked-in [fuzz session](fuzz/log.txt) ran 60.012 seconds with seed
+20260801, exercised 1,091,630 vectors, and recorded zero divergences. The
+shared-workload [benchmark](bench/results.json) uses 20 cold starts and 1,000
+persistent requests per implementation; it is a same-host observation only.
+
+The source suite's Deno execution, public-clone verification, demo video, and
+new external CI proof remain unverified in this local evidence record.

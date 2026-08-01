@@ -1,4 +1,45 @@
-# TinyColor
+# TinyColor Go port
+
+This checkout preserves the upstream JavaScript implementation as an immutable
+oracle and provides an independent Go compatibility port in `src/`. The Go CLI
+supports `parse`, `convert`, `lighten`, `palette`, and `contrast`.
+
+```powershell
+go -C src build -o ../bin/tinycolor.exe ./cmd/tinycolor-compat
+.\bin\tinycolor.exe parse --json red
+.\bin\tinycolor.exe convert --to hsl --json red
+.\bin\tinycolor.exe lighten --amount 10 --json '#000'
+.\bin\tinycolor.exe palette --type triad --json red
+.\bin\tinycolor.exe contrast --json '#000' '#fff'
+```
+
+## Evidence and reproduction
+
+- Fixed differential corpora: `node compat/run.mjs compat/cases/operations.jsonl`
+  (current result: 71/71, zero mismatches).
+- Seeded differential fuzzing: `node fuzz/harness.mjs --duration 60 --seed 20260801`.
+  The recorded [fuzz log](fuzz/log.txt) reports 60.012 seconds, 1,091,630
+  vectors, and zero divergences.
+- Same-host benchmark: `node bench/run.mjs --output bench/results.json`.
+  The checked-in [results](bench/results.json) and
+  [methodology](bench/methodology.md) report startup p99, request p99,
+  throughput, and observed RSS for Node and Go.
+- Go coverage: `go -C src test -cover ./...`; the recorded report is
+  [bench/coverage.txt](bench/coverage.txt).
+
+The benchmark ran on Windows x64 (Core i7-13650HX), Node 22.19.0, and Go
+1.26.5. It observed Go p99 startup 8.7813 ms versus JavaScript 40.0631 ms,
+Go request p99 0.1773 ms versus 0.3286 ms, and Go throughput 16,439 ops/sec
+versus 7,376 ops/sec. These are same-host observations, not universal claims.
+
+The source oracle is [bgrins/TinyColor](https://github.com/bgrins/TinyColor)
+at `b49018c9f2dbca313d80d7a4dad25e26143cfe01`, under the MIT license. See
+[COMPATIBILITY.md](COMPATIBILITY.md), [DECISIONS.md](DECISIONS.md), and
+[docs/DEMO.md](docs/DEMO.md) for the complete delivery record.
+
+---
+
+# Upstream TinyColor reference
 
 ## JavaScript color tooling
 
