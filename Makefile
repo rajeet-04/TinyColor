@@ -34,7 +34,7 @@ fuzz:
 	node fuzz/harness.mjs --duration 60 --seed 20260801
 
 bench:
-	node bench/run.mjs
+	node bench/run.mjs --output bench/results.json
 
 clean:
 	node -e "const fs = require('node:fs'); for (const file of ['bin/tinycolor', 'bin/tinycolor.exe']) fs.rmSync(file, { force: true });"

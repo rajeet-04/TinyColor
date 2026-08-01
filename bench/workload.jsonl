@@ -1,0 +1,12 @@
+{"id":"smoke-name-red","operation":"inspect","input":"red"}
+{"id":"smoke-rgba-red","operation":"inspect","input":"rgba(255, 0, 0, .5)"}
+{"id":"smoke-rgb-object","operation":"inspect","input":{"r":255,"g":0,"b":0}}
+{"id":"conv-hex","operation":"output","input":"red","args":{"method":"toHex"}}
+{"id":"conv-rgb","operation":"output","input":"red","args":{"method":"toRgbString"}}
+{"id":"conv-brightness","operation":"analysis","input":"#000","args":{"method":"brightness"}}
+{"id":"op-mod-lighten-normal","operation":"modify","input":"#804020","args":{"method":"lighten","amount":20}}
+{"id":"op-mod-darken-normal","operation":"modify","input":"#804020","args":{"method":"darken","amount":20}}
+{"id":"op-mod-saturate-normal","operation":"modify","input":"#808040","args":{"method":"saturate","amount":20}}
+{"id":"pal-complement","operation":"palette","input":"#f00","args":{"method":"complement"}}
+{"id":"pal-analogous","operation":"palette","input":"#f00","args":{"method":"analogous","results":6,"slices":30}}
+{"id":"read-isReadable","operation":"isReadable","input":"#000","args":{"other":"#fff","options":{"level":"AA","size":"small"}}}

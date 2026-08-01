@@ -1,4 +1,29 @@
 {
-  "status": "not_run",
-  "reason": "Benchmarking is scheduled for the delivery phase."
+  "generatedAt": "2026-08-01T03:52:33.347Z",
+  "os": "Linux",
+  "architecture": "x64",
+  "cpu": "Intel(R) Xeon(R) Processor @ 2.30GHz",
+  "versions": {
+    "node": "v22.22.1",
+    "go": "go1.24.3"
+  },
+  "workloadSha256": "233f98eef708215f5a9a94e54f5454e20a7a93d7364203f31b9157a4a83cf1b0",
+  "samples": {
+    "coldStarts": 20,
+    "requests": 1000
+  },
+  "implementations": {
+    "javascript": {
+      "startupP99Ms": 58.134653,
+      "latencyP99Ms": 1.308599,
+      "throughputOpsPerSecond": 2460.0813303871855,
+      "peakRssBytes": 59228160
+    },
+    "go": {
+      "startupP99Ms": 4.37013,
+      "latencyP99Ms": 0.472981,
+      "throughputOpsPerSecond": 6776.240921819215,
+      "peakRssBytes": 7602176
+    }
+  }
 }
