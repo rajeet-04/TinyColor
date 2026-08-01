@@ -1,16 +1,16 @@
 ---
-status: investigating
+status: resolved
 trigger: "Investigate and fix next deterministic Phase 5 fuzz parity mismatch: readability for {r:127,g:64,b:15,a:0} against '#80007f' returns 1.188086751976723 in JavaScript and 1.1880867519767233 in Go."
 created: 2026-08-01T00:00:00+05:30
-updated: 2026-08-01T00:04:00+05:30
+updated: 2026-08-01T06:00:00+05:30
 ---
 
 ## Current Focus
 
-hypothesis: confirmed: V8 Math.pow and Go math.Pow use different algorithms whose final rounding differs across the finite 8-bit luminance channel domain
-test: inspect the primary V8 implementation and compare all 245 nonlinear channel values to select the smallest exact shared-method implementation
-expecting: algorithm evidence plus the bounded mismatch distribution will show whether a small compatible calculation exists or an exact transfer table is required
-next_action: inspect V8 ieee754 pow source and evaluate exact implementation options
+hypothesis: resolved: exact V8-derived results are required for the finite 8-bit luminance domain
+test: exact readability regression, 71-case operations corpus, and broad seeded fuzz harness
+expecting: exact parity with no tolerance or output rounding
+next_action: record and validate the required 60-second seed-20260801 fuzz log
 
 ## Symptoms
 
@@ -55,7 +55,7 @@ started: uncovered after the fuzz saturation root-cause fix.
 
 ## Resolution
 
-root_cause:
-fix:
-verification:
-files_changed: []
+root_cause: V8 Math.pow and Go math.Pow produce different final float64 bits for 93 of TinyColor's 245 nonlinear 8-bit channel values.
+fix: Color.Luminance now uses a finite V8-derived 256-entry transfer table. The follow-on palette divergences were fixed at their shared constructor boundary by applying TinyColor's sub-one channel rounding and bound01 normalization.
+verification: The exact regression passed; all 71 operations cases matched; the full local verify equivalent passed; seed 1 ran for 1.008 seconds across 14,778 cases with zero divergences.
+files_changed: [src/tinycolor/luminance.go, src/tinycolor/color.go, src/tinycolor/operations_test.go, src/cmd/pow-debug/main.go]

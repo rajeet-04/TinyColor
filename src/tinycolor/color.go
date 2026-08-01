@@ -33,10 +33,22 @@ type WCAG2Options struct {
 }
 
 func FromCompat(input any, fromRatio bool) (Color, error) {
+	var model color.Model
 	if fromRatio {
-		return Color{model: parser.ParseFromRatio(input)}, nil
+		model = parser.ParseFromRatio(input)
+	} else {
+		model = parser.Parse(input)
 	}
-	return Color{model: parser.Parse(input)}, nil
+	if model.R < 1 {
+		model.R = math.Floor(model.R + .5)
+	}
+	if model.G < 1 {
+		model.G = math.Floor(model.G + .5)
+	}
+	if model.B < 1 {
+		model.B = math.Floor(model.B + .5)
+	}
+	return Color{model: model}, nil
 }
 func FromCompatWithOptions(input any, fromRatio bool, options CompatOptions) (Color, error) {
 	c, e := FromCompat(input, fromRatio)
@@ -170,14 +182,7 @@ func (c Color) ToFilter(second *Color, gradient bool) string {
 func (c Color) Brightness() float64 { x := c.ToRGB(); return float64(x.R*299+x.G*587+x.B*114) / 1000 }
 func (c Color) Luminance() float64 {
 	x := c.ToRGB()
-	f := func(v int) float64 {
-		z := float64(v) / 255
-		if z <= .03928 {
-			return z / 12.92
-		}
-		return math.Pow((z+.055)/1.055, 2.4)
-	}
-	return .2126*f(x.R) + .7152*f(x.G) + .0722*f(x.B)
+	return .2126*luminanceChannel(x.R) + .7152*luminanceChannel(x.G) + .0722*luminanceChannel(x.B)
 }
 func Readability(first, second Color) float64 {
 	firstLuminance, secondLuminance := first.Luminance(), second.Luminance()
@@ -303,7 +308,7 @@ func roundedAlpha(alpha float64) string {
 }
 
 func rgbToHSL(r, g, b float64) (float64, float64, float64) {
-	r, g, b = r/255, g/255, b/255
+	r, g, b = color.Bound01(r, 255), color.Bound01(g, 255), color.Bound01(b, 255)
 	max, min := math.Max(r, math.Max(g, b)), math.Min(r, math.Min(g, b))
 	l := (max + min) / 2
 	if max == min {
@@ -327,7 +332,7 @@ func rgbToHSL(r, g, b float64) (float64, float64, float64) {
 }
 
 func rgbToHSV(r, g, b float64) (float64, float64, float64) {
-	r, g, b = r/255, g/255, b/255
+	r, g, b = color.Bound01(r, 255), color.Bound01(g, 255), color.Bound01(b, 255)
 	max, min := math.Max(r, math.Max(g, b)), math.Min(r, math.Min(g, b))
 	d := max - min
 	if max == 0 {
