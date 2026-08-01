@@ -15,6 +15,7 @@
 - Go tests and vet pass; Node adapter, verifier, harness, and log-validator tests pass.
 - Immutable Deno source suite: 45 passed, 0 failed, 1 ignored.
 - Differential fuzz evidence: 60.012 seconds, seed 20260801, 1,091,630 cases, zero divergences.
+- GitHub Actions run 30675374085 passed verification, Deno, build, and artifact upload.
 
 ## Recent Decisions
 
