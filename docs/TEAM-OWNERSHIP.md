@@ -29,3 +29,12 @@ Every handoff includes the commit, public contract or command added, passing
 checks, corpus coverage, and known gaps. Do not hand off an uncommitted shared
 working tree as the only artifact.
 
+## Phase 5 integration handoff
+
+- @rajeet-04 integrated exact fuzz parity, the validated 60-second log, and the
+  shared benchmark evidence on branch `rajeet`.
+- @mrashis owns any new differential mismatch reproduction.
+- @deepali owns final submission presentation and the manual demo-video URL.
+- @xthxr remains the review lead for conversion, readability, and palette
+  behavior; Phase 1–4 ownership is unchanged.
+
