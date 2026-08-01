@@ -1,0 +1,111 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-08-01T00:04:30.289Z",
+  "phase": "5",
+  "phase_name": "Delivery Evidence",
+  "phase_dir": ".planning/phases/05-delivery-evidence",
+  "plan": 2,
+  "task": 1,
+  "total_tasks": 3,
+  "status": "paused",
+  "completed_tasks": [
+    {
+      "id": "05-01-01",
+      "name": "Human CLI",
+      "status": "done",
+      "commit": "df1f9b8"
+    },
+    {
+      "id": "05-01-02",
+      "name": "Reproducible verification gate",
+      "status": "done",
+      "commit": "a4ad85e"
+    },
+    {
+      "id": "05-01-03",
+      "name": "Port CI and source suite",
+      "status": "done",
+      "commit": "d8ba485"
+    },
+    {
+      "id": "05-02-01",
+      "name": "Differential fuzz harness",
+      "status": "in_progress",
+      "progress": "Persistent seeded harness is implemented but deliberately uncommitted/blocked by an exact readability precision mismatch. First saturation mismatch was fixed in 0a9db8b."
+    }
+  ],
+  "remaining_tasks": [
+    {
+      "id": "05-02-01",
+      "name": "Finish broad fuzz harness after readability parity fix",
+      "status": "in_progress"
+    },
+    {
+      "id": "05-02-02",
+      "name": "Validate and record real 60-second fuzz log",
+      "status": "not_started"
+    },
+    {
+      "id": "05-02-03",
+      "name": "Generate shared-workload benchmark evidence",
+      "status": "not_started"
+    },
+    {
+      "id": "05-03",
+      "name": "Submission documentation, evidence refresh, external checkpoint, and phase closeout",
+      "status": "not_started"
+    }
+  ],
+  "blockers": [
+    {
+      "description": "Exact readability mismatch: JavaScript 1.188086751976723 versus Go 1.1880867519767233 for {r:127,g:64,b:15,a:0} against #80007f.",
+      "type": "technical",
+      "workaround": "None allowed. Do not add tolerance or narrow fuzz inputs. Continue .planning/debug/fuzz-readability-precision.md; root cause is V8 Math.pow versus Go math.Pow final rounding. An exact bounded 256-entry transfer lookup is the leading safe fix."
+    },
+    {
+      "description": "The WIP branch intentionally contains a failing exact readability regression and fuzz zero-divergence test.",
+      "type": "technical",
+      "workaround": "Fix the shared Luminance transfer function, run the exact regression and operations corpus, then rerun the broad seed-1 fuzz smoke before committing production completion."
+    }
+  ],
+  "human_actions_pending": [
+    {
+      "action": "Record and publish the five-minute demo video, then add its URL.",
+      "context": "docs/DEMO.md is still a future Plan 05-03 deliverable; no video is claimed.",
+      "blocking": true
+    }
+  ],
+  "decisions": [
+    {
+      "decision": "Keep broad bounded fuzz generation and stop on every exact mismatch.",
+      "rationale": "Narrowing to corpus-proven inputs would hide defects and violate behavioral-equivalence scoring.",
+      "phase": "5"
+    },
+    {
+      "decision": "Pin oracle checkout bytes to CRLF with .gitattributes instead of normalizing hashes.",
+      "rationale": "The kickoff manifest hashes raw CRLF working-tree bytes; CI must reproduce that byte contract.",
+      "phase": "5"
+    },
+    {
+      "decision": "Run `deno test test.js` explicitly in CI.",
+      "rationale": "Deno 2 removed broad discovery exclusions and otherwise includes generated npm and Node port tests outside the immutable source suite.",
+      "phase": "5"
+    },
+    {
+      "decision": "Prefer an exact finite-domain luminance transfer lookup if no smaller V8-compatible power implementation exists.",
+      "rationale": "TinyColor rounds luminance channels to 8-bit integers; Go math.Pow differs from V8 for 93 of 245 nonlinear channels and heuristic ULP correction is incorrect.",
+      "phase": "5"
+    }
+  ],
+  "uncommitted_files": [
+    "compat/cases/operations.jsonl",
+    "fuzz/README.md",
+    "fuzz/harness.mjs",
+    "fuzz/harness.test.mjs",
+    "src/tinycolor/operations_test.go",
+    "src/cmd/pow-debug/main.go",
+    ".planning/debug/fuzz-readability-precision.md"
+  ],
+  "next_action": "Run `$gsd-resume-work`, read `.planning/debug/fuzz-readability-precision.md`, finish the exact luminance transfer fix with the existing RED tests, then run `node fuzz/harness.mjs --duration 1 --seed 1` without narrowing the generator.",
+  "context_notes": "Branch rajeet. GitHub Actions run 30673847990 passed make verify, deno test test.js, build, and artifact upload. Local Deno 2.9.4 ran the immutable suite: 45 passed, 0 failed, 1 ignored. Current broad fuzz smoke is expected red: 12,291 cases and 388 divergences before the readability fix."
+}
