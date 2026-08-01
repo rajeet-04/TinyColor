@@ -15,6 +15,12 @@ Full evidence run:
 node fuzz/harness.mjs --duration 60 --seed 20260801
 ```
 
+Validate the checked-in evidence:
+
+```text
+node fuzz/validate-log.mjs fuzz/log.txt
+```
+
 Rerun a failure with the logged seed and duration. Each divergence is a JSON
 object containing the request and both responses; the four final lines report
 duration, seed, case count, and divergence count.
