@@ -17,3 +17,4 @@
 | D-013 | Benchmark both adapters with the same fixed JSONL workload and lifecycle. | Shared inputs and same-host cold/persistent runs make the measurements directly reproducible. | Accepted |
 | D-014 | Normalize benchmark workload newlines before hashing. | Evidence hashes remain stable across Windows and Unix checkouts without changing request content. | Accepted |
 | D-015 | Publish unsupported or external deliverables as unverified. | Honest missing evidence is preferable to unreproducible CI, public-access, or video claims. | Accepted |
+| D-016 | Return an empty typed Go palette for non-positive counts instead of reproducing TinyColor's non-terminating negative `analogous` loop. | Compatibility must not make a public Go call hang indefinitely; adapter zero values still retain TinyColor's documented defaults. | Accepted |
