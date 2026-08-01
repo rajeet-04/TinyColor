@@ -260,7 +260,13 @@ func jsTruthy(value any) bool {
 func Random() Color {
 	return Color{model: color.Model{R: rand.Float64() * 255, G: rand.Float64() * 255, B: rand.Float64() * 255, A: 1, Valid: true, Format: color.FormatRGB}}
 }
-func mathRound(v float64) int { return int(math.Floor(v + .5)) }
+func mathRound(v float64) int {
+	floor := math.Floor(v)
+	if v-floor >= .5 {
+		floor++
+	}
+	return int(floor)
+}
 
 // String supplies the minimal source-compatible string snapshot used by the
 // JSONL oracle. Full public output APIs remain Phase 3 work.
@@ -328,7 +334,7 @@ func rgbToHSL(r, g, b float64) (float64, float64, float64) {
 	}
 	d := max - min
 	s := d / (2 - max - min)
-	if l < 0.5 {
+	if l <= 0.5 {
 		s = d / (max + min)
 	}
 	var h float64

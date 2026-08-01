@@ -44,6 +44,13 @@ func TestPercentageRGBUsesUnroundedChannels(t *testing.T) {
 	}
 }
 
+func TestOnePercentRGBMatchesJavaScriptHSLRounding(t *testing.T) {
+	color, _ := FromCompat(map[string]any{"r": "1%", "g": "0%", "b": "0%", "a": float64(1)}, false)
+	if got := color.ToHSLString(); got != "hsl(0, 100%, 0%)" {
+		t.Fatalf("ToHSLString() = %q", got)
+	}
+}
+
 func TestEqualsRejectsFalsyInput(t *testing.T) {
 	if Equals("", map[string]any{"h": float64(529), "s": float64(15), "l": float64(-77), "a": float64(-1.132)}) {
 		t.Fatal("empty input must not equal normalized black")

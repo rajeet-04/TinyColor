@@ -293,6 +293,14 @@ func TestPaletteConversionUsesTinyColorChannelBounds(t *testing.T) {
 	}
 }
 
+func TestPaletteHSLMetadataMatchesJavaScriptPrecision(t *testing.T) {
+	color, _ := FromCompat("#967a", false)
+	original, ok := color.Complement().Original().(map[string]any)
+	if !ok || original["s"] != 0.19999999999999996 {
+		t.Fatalf("complement original = %#v", original)
+	}
+}
+
 func paletteHex(colors []Color) string {
 	values := make([]string, len(colors))
 	for index, color := range colors {
