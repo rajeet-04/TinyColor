@@ -24,8 +24,11 @@ cases ── differential driver ── Go JSONL runner
 3. **Public library (`src/tinycolor`):** exposes explicit Go values and methods.
    It owns conversions, formatting, mutation, utilities, readability, and
    palettes.
-4. **CLI (`src/cmd/tinycolor`):** a thin user-facing wrapper; it calls the same
+4. **CLI (`src/cmd/tinycolor-compat`):** a thin user-facing wrapper; it calls the same
    library and does not reimplement parsing or conversion.
+
+The same zero-argument executable is used by `compat/run.mjs`, the fuzz harness,
+and the benchmark runner. Human subcommands select the judge-facing CLI instead.
 
 ## Compatibility protocol
 

@@ -1,31 +1,20 @@
-# Testing Strategy
+# Testing strategy
 
-## Test layers
-
-| Layer | Purpose | Command when implemented |
+| Layer | Purpose | Command |
 |---|---|---|
-| Go unit tests | Local conversion and parser invariants | `go test ./...` from `src/` |
-| Differential corpus | Exact observable parity with local `mod.js` | `node compat/run.mjs <jsonl>` |
-| Regression corpus | Permanently reproduce every found mismatch | `node compat/run.mjs compat/cases/regression.jsonl` |
-| Seeded fuzz cases | Find coercion, bounds, and rounding gaps | documented seed command |
-| Source suite | Validate original source remains runnable | `deno task test` when Deno exists |
-| Static checks | Formatting and common Go defects | `gofmt`, `go vet ./...` |
+| Full local gate | Format, hashes, unit, differential, fuzz-log, vet | `make verify` |
+| Original source suite | Untouched upstream behavior | `deno test test.js` |
+| Go unit/coverage | Package behavior and honest coverage | `go -C src test -cover ./...` |
+| Fixed differential | Exact JS/Go response parity | `node compat/run.mjs compat/cases/operations.jsonl` |
+| Fuzz smoke | Seeded broad exact comparison | `node fuzz/harness.mjs --duration 1 --seed 20260801` |
+| Fuzz evidence | Validate recorded 60-second run | `node fuzz/validate-log.mjs fuzz/log.txt` |
+| Benchmark smoke | Real quick measurement to temporary output | `node bench/run.mjs --quick --output <temporary-path>` |
+| Benchmark evidence | Full same-host measurement | `node bench/run.mjs --output bench/results.json` |
 
-## Comparison rules
+Strings, booleans, arrays, errors, formats, and parsed numeric results are
+compared exactly. No global epsilon is used. Every discovered mismatch becomes
+a deterministic regression before the shared implementation boundary is fixed.
 
-- Compare strings byte-for-byte.
-- Compare booleans, arrays, formats, and errors exactly.
-- Serialize non-finite values explicitly if the source produces them; JSON's
-  default inability to represent them must not silently erase a difference.
-- Use a narrowly documented normalization only for JavaScript/Go JSON number
-  serialization—not for color math. Never use a global epsilon.
-- Seed random generation and print the seed on failure.
-
-## Corpus priorities
-
-1. Inputs copied from `test.js` in parser and output groups.
-2. Boundaries: `-1`, `0`, `1`, `1.0`, `100%`, `255`, overflow, blank, malformed,
-   alpha `0`, and hue values below/above 360.
-3. State transitions: clone, set alpha, all instance modifiers, default versus
-   explicit zero amount.
-4. Structured random RGB/RGBA/HSL/HSV inputs generated from a fixed seed.
+The fixed corpora cover source-test inputs, permissive and malformed parsing,
+numeric boundaries, alpha and hue behavior, conversions, mutation, WCAG
+readability, mixing, and ordered palettes. Random output is invariant-tested.
