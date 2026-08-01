@@ -22,4 +22,4 @@ the Go port is accepted only when exact differential evidence agrees.
 
 - Target source: local `mod.js` / `test.js`; MIT attribution retained.
 - Target language: Go 1.26+; standard library first.
-- Node is available as local oracle runtime; Deno is currently unavailable.
+- Node and Deno are available as local oracle runtimes.

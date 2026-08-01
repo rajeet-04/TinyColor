@@ -4,34 +4,38 @@
 
 ## Current Position
 
-- Phase 5 of 5: Delivery Evidence
-- Plan 05-02, Task 3 of 3: shared-workload benchmark not started
-- Plans 1–4 are complete; Phase 5 Plan 05-01 and fuzz Tasks 05-02-01/02 are complete.
+- Phase 5 of 5: Delivery Evidence — complete.
+- All three Phase 5 plans and all milestone implementation plans are complete.
+- Remaining human submission action: record, upload, and link the five-minute demo video.
 
 ## Verified Evidence
 
+- Public repository: https://github.com/rajeet-04/TinyColor
+- Unauthenticated `ls-remote` returned branch `rajeet` at
+  `1c218b669d192e37b7019b08395cf348410dde79`.
+- GitHub Actions run 30686980719 passed `make verify`, Deno, build, and artifact
+  upload for that exact commit:
+  https://github.com/rajeet-04/TinyColor/actions/runs/30686980719
 - Immutable JavaScript oracle hashes: 3/3 verified.
-- Exact corpora: smoke 9/9, HEX/RGB 26/26, parser 23/23, conversion 35/35, operations 71/71.
-- Go tests and vet pass; Node adapter, verifier, harness, and log-validator tests pass.
+- Exact corpora: smoke 9/9, HEX/RGB 26/26, parser 23/23, conversion 35/35,
+  operations 71/71; 164/164 total and zero mismatches.
+- Go tests/vet and 15 Node tests pass.
 - Immutable Deno source suite: 45 passed, 0 failed, 1 ignored.
-- Differential fuzz evidence: 60.012 seconds, seed 20260801, 1,091,630 cases, zero divergences.
-- GitHub Actions run 30675374085 passed verification, Deno, build, and artifact upload.
+- Differential fuzz evidence: 60.012 seconds, seed 20260801, 1,091,630 cases,
+  zero divergences.
+- Shared benchmark: 20 cold starts and 1,000 persistent requests per runtime,
+  with startup p99, latency p99, throughput, and peak RSS recorded.
+- Go `unsafe` source occurrences: 0.
 
 ## Recent Decisions
 
 - Use the pinned V8-derived 8-bit luminance transfer table for exact `Math.pow` parity.
-- Apply TinyColor's sub-one RGB rounding once at the `FromCompat` constructor boundary.
-- Keep fuzz inputs broad and comparisons exact; never replace divergences with tolerance.
-
-## Remaining
-
-- Implement honest same-host startup p99, latency p99, throughput, and peak RSS benchmarks.
-- Complete Plan 05-03 judge-facing documentation and final evidence refresh.
-- Verify the pushed GitHub Actions run and public clone workflow.
-- Human action: record and publish the five-minute demo video.
+- Apply TinyColor's sub-one RGB rounding once at the `FromCompat` boundary.
+- Keep fuzz comparisons exact and normalize benchmark workload newlines before hashing.
+- Never claim external evidence until public access and exact-commit CI are observed.
 
 ## Session Continuity
 
-Last session: 2026-08-01T00:20:50.023Z
-Stopped at: Plan 05-02 Task 3, ready to implement benchmarks with TDD.
-Resume file: `.planning/phases/05-delivery-evidence/.continue-here.md`
+Last session: 2026-08-01
+Stopped at: Phase 5 complete; demo video remains a human submission action.
+Resume file: none

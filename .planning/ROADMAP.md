@@ -12,7 +12,7 @@ through parsing and observable output, to operations and delivery proof.
 - [x] **Phase 2: Parsing and Color State** - Match accepted inputs and normalized TinyColor state.
 - [x] **Phase 3: Conversion and Representation** - Match conversion, output, and analysis behavior.
 - [x] **Phase 4: Operations and Palettes** - Match manipulation, readability, and color-combination behavior.
-- [ ] **Phase 5: Delivery Evidence** - Ship the CLI, CI, benchmarks, and submission documentation.
+- [x] **Phase 5: Delivery Evidence** - Ship the CLI, CI, benchmarks, and submission documentation.
 
 ## Phase Details
 
@@ -78,7 +78,12 @@ Plans:
   1. CI runs format, vet, Go tests, and the differential smoke report.
   2. The CLI supports parse, convert, lighten, palette, and contrast, including JSON output.
   3. Benchmarks, documentation, license attribution, team work, and known differences are complete.
-**Plans**: TBD
+**Plans**: 3 plans (complete 2026-08-01)
+
+Plans:
+- [x] 05-01: Add the human CLI, reproducible build/verification gate, Docker artifact, and CI.
+- [x] 05-02: Publish differential fuzz and shared-workload benchmark evidence.
+- [x] 05-03: Publish judge-facing documentation and verify local/public delivery evidence.
 
 ## Progress
 
@@ -88,4 +93,4 @@ Plans:
 | 2. Parsing and Color State | 2/2 | Complete | 2026-08-01 |
 | 3. Conversion and Representation | 2/2 | Complete | 2026-08-01 |
 | 4. Operations and Palettes | 6/6 | Complete | 2026-08-01 |
-| 5. Delivery Evidence | 0/TBD | Not started | - |
+| 5. Delivery Evidence | 3/3 | Complete | 2026-08-01 |

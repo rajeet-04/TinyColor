@@ -80,6 +80,7 @@ Evidence:
 - [Benchmark results](bench/results.json) and [methodology](bench/methodology.md) — same-host startup p99, latency p99, throughput, and peak RSS.
 - [Architectural decisions](DECISIONS.md), [architecture](docs/ARCHITECTURE.md), [testing](docs/TESTING.md), and [team ownership](docs/TEAM-OWNERSHIP.md).
 - [Five-minute demo script](docs/DEMO.md).
+- [Successful exact-commit CI run](https://github.com/rajeet-04/TinyColor/actions/runs/30686980719).
 
 ## Repository layout
 

@@ -66,8 +66,8 @@ observations, not universal speedup claims.
 - Differential Fuzz Survivor: eligible from the validated 60-second log.
 - Zero Unsafe: eligible from zero Go source occurrences.
 - Decision Log: eligible from 15 substantive decisions.
-- GitHub Actions: configured; the final exact-commit run is not yet recorded here.
-- Public repository visibility: not yet verified from an unauthenticated clone in this closeout.
+- GitHub Actions: [run 30686980719](https://github.com/rajeet-04/TinyColor/actions/runs/30686980719) passed the full gate, Deno, build, and artifact upload for commit `1c218b6`.
+- Public repository visibility: unauthenticated `git ls-remote https://github.com/rajeet-04/TinyColor.git refs/heads/rajeet` returned exact commit `1c218b6`.
 - Five-minute demo video: not supplied.
 
 No known mismatch remains in the fixed corpus or recorded fuzz session.
