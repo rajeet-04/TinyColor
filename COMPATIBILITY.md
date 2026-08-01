@@ -1,94 +1,73 @@
-# Compatibility Matrix
+# Compatibility evidence
 
-Target: this checkout's `mod.js` and `test.js` from `bgrins/TinyColor`.
+Target: `bgrins/TinyColor` commit
+`b49018c9f2dbca313d80d7a4dad25e26143cfe01`, pinned by
+`tests/original/manifest.sha256`.
 
-## Current evidence
+## Fixed differential corpora
 
-| Area | Status | Evidence | Notes |
-|---|---|---|---|
-| Oracle baseline | Ready | `mod.js`, `test.js`, Node 24.18.0 | JavaScript source is untouched. |
-| Node adapter | Passing | `node tests/port/adapter.test.mjs` | Imports local `mod.js`; success/error responses are exclusive. |
-| Go adapter | Passing | `go test ./...` from `src/` | JSONL schema shared with Node adapter. |
-| HEX/RGB/name parsing | Passing | `compat/cases/parser-hex-rgb.jsonl` | Source-derived HEX/RGB/name/object corpus. |
-| HSL/HSV parsing | Passing | `compat/cases/parser.jsonl` | Includes ratios, percentages, wrapping, and object precedence. |
-| Conversion/formatting | Passing | `compat/cases/conversion.jsonl` | 35 fixed JSONL cases; random is invariant-only. |
-| Analysis/readability | Passing | `compat/cases/operations.jsonl` | WCAG defaults, thresholds, ties, fallback, and null selection. |
-| Manipulation/palettes | Passing | `compat/cases/operations.jsonl` | 69 fixed operations cases cover modifiers, Mix, readability, and ordered palettes. |
-| CLI/CI/benchmarks | Planned | Wave 4 | No result claimed yet. |
-| Original Deno suite | Blocked locally | `deno` unavailable | Run when Deno is installed or in CI. |
+Fresh command: `node compat/run.mjs <corpus>`.
 
-## Mismatch record format
+| Corpus | Passed/total | Mismatches |
+|---|---:|---:|
+| `compat/cases/smoke.jsonl` | 9/9 | 0 |
+| `compat/cases/parser-hex-rgb.jsonl` | 26/26 | 0 |
+| `compat/cases/parser.jsonl` | 23/23 | 0 |
+| `compat/cases/conversion.jsonl` | 35/35 | 0 |
+| `compat/cases/operations.jsonl` | 71/71 | 0 |
+| **Total** | **164/164** | **0** |
 
-```text
-Case: <stable case id>
-Operation: <adapter operation>
-Input: <JSON>
-JavaScript: <JSON or error>
-Go: <JSON or error>
-Owner: <A/B/C/D>
-Status: open | fixed | accepted-difference
-Reason: <required for accepted difference>
-```
+Random-color behavior is checked through validity, alpha, and channel-range
+invariants rather than exact equality between independent random generators.
 
-## Phase 1 smoke result
+## Source suite and oracle integrity
 
-On 2026-08-01, the fixed Phase 1 corpus passed with **9/9 cases** and **0
-mismatches**:
+- `node tests/original/verify.mjs`: 3/3 kickoff hashes verified.
+- `deno test test.js`: 45 passed, 0 failed, 1 ignored.
+- The ignored `polyad` test is also ignored by the pinned upstream suite.
 
-```powershell
-$env:GOCACHE = 'R:\Code\TinyColor\.cache\go-build'
-node tests/port/adapter.test.mjs
-Set-Location src; go test ./...; go vet ./...; Set-Location ..
-node compat/run.mjs compat/cases/smoke.jsonl
-```
+## Go coverage and safety
 
-This is only the fixed Phase 1 corpus; it is not a full TinyColor parity claim.
+Fresh command: `go -C src test -cover ./...`.
 
-## Phase 2 parser slice result
+| Package | Statement coverage |
+|---|---:|
+| `cmd/tinycolor-compat` | 33.6% |
+| `internal/color` | 90.5% |
+| `internal/compat` | 57.1% |
+| `internal/parser` | 85.8% |
+| `tinycolor` | 92.8% |
 
-On 2026-08-01, the HEX/RGB/name parser corpus passed with **26/26 cases** and
-**0 mismatches**:
+These are Go package coverage figures, not a JavaScript coverage comparison.
+`rg -n '\bunsafe\b' src -g '*.go'` reports **0 Go source occurrences**.
 
-```powershell
-$env:GOCACHE = 'R:\Code\TinyColor\.cache\go-build'
-Set-Location src; go test ./...; go vet ./...; Set-Location ..
-node compat/run.mjs compat/cases/parser-hex-rgb.jsonl
-node compat/run.mjs compat/cases/smoke.jsonl
-```
+## Differential fuzzing
 
-This records only the completed parser slice; the full HSL/HSV corpus remains
-Phase 2 Plan 02 work.
+[`fuzz/log.txt`](fuzz/log.txt) records 60.012 seconds, seed 20260801,
+1,091,630 cases, and zero divergences. Validate it with
+`node fuzz/validate-log.mjs fuzz/log.txt`. This supports the Differential Fuzz
+Survivor claim; exact comparison remains enabled.
 
-## Phase 2 full parser result
+## Same-host benchmark
 
-`node compat/run.mjs compat/cases/parser.jsonl` passed with **23/23 cases** and
-**0 mismatches** on 2026-08-01. The unchanged Phase 1 smoke corpus also passed
-**9/9** with **0 mismatches**.
+The committed [results](bench/results.json) were measured on Windows x64 with
+20 cold starts and 1,000 persistent requests per implementation:
 
-## Phase 3 conversion result
+| Implementation | Startup p99 | Latency p99 | Throughput | Peak RSS |
+|---|---:|---:|---:|---:|
+| JavaScript | 41.4131 ms | 0.2795 ms | 7,834.77 ops/s | 42,868,736 bytes |
+| Go | 11.0109 ms | 0.1808 ms | 16,756.79 ops/s | 12,668,928 bytes |
 
-On 2026-08-01, the fixed conversion corpus passed with **35/35 cases** and
-**0 mismatches**. The complete Phase 1–3 gate also retained **9/9** smoke,
-**26/26** HEX/RGB/name, and **23/23** parser cases with zero mismatches:
+See [`bench/methodology.md`](bench/methodology.md). These are same-host
+observations, not universal speedup claims.
 
-```powershell
-$env:GOCACHE = 'R:\Code\TinyColor\.cache\go-build'
-Set-Location src; go test ./...; go vet ./...; Set-Location ..
-node tests/port/adapter.test.mjs
-node compat/run.mjs compat/cases/smoke.jsonl
-node compat/run.mjs compat/cases/parser-hex-rgb.jsonl
-node compat/run.mjs compat/cases/parser.jsonl
-node compat/run.mjs compat/cases/conversion.jsonl
-```
+## Bonus and external evidence status
 
-Random-color behavior is verified by validity, alpha, and channel-range
-invariants only; it is not compared exactly across independent JavaScript and
-Go random generators.
+- Differential Fuzz Survivor: eligible from the validated 60-second log.
+- Zero Unsafe: eligible from zero Go source occurrences.
+- Decision Log: eligible from 15 substantive decisions.
+- GitHub Actions: configured; the final exact-commit run is not yet recorded here.
+- Public repository visibility: not yet verified from an unauthenticated clone in this closeout.
+- Five-minute demo video: not supplied.
 
-## Phase 4 operations result
-
-On 2026-08-01, the fixed operations corpus passed with **69/69 cases** and
-**0 mismatches**. The full available Phase 1-4 gate also retained **9/9**
-smoke, **26/26** HEX/RGB/name, **23/23** parser, and **35/35** conversion
-cases with zero mismatches. This evidence does not claim a Deno source-suite
-pass because Deno is unavailable locally.
+No known mismatch remains in the fixed corpus or recorded fuzz session.
