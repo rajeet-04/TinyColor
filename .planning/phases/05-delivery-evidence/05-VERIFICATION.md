@@ -1,6 +1,6 @@
 ---
 phase: 5
-status: locally-verified
+status: verified
 verified: 2026-08-01
 requirements: [DEL-01, QLT-03]
 ---
@@ -17,7 +17,7 @@ local evidence from external actions.
 
 | Criterion | Status | Evidence |
 |---|---|---|
-| CI runs format, vet, Go tests, and differential checks | Configured; exact final run pending | `.github/workflows/port.yml`, `Makefile`; local constituent commands passed. |
+| CI runs format, vet, Go tests, and differential checks | Passed | [Run 30686980719](https://github.com/rajeet-04/TinyColor/actions/runs/30686980719) passed for exact commit `1c218b669d192e37b7019b08395cf348410dde79`. |
 | CLI supports parse, convert, lighten, palette, contrast, and JSON | Local pass | `make build` equivalent plus all five JSON invocations exited zero; implementation under `src/cmd/tinycolor-compat`. |
 | Benchmarks, docs, attribution, ownership, and known differences are complete | Local pass | `bench/results.json`, `bench/methodology.md`, `README.md`, `LICENSE`, `DECISIONS.md`, `COMPATIBILITY.md`, `docs/TEAM-OWNERSHIP.md`. |
 
@@ -45,9 +45,12 @@ local evidence from external actions.
 
 ## External checkpoint
 
-- Public repository: pending unauthenticated verification.
-- Exact final-commit GitHub Actions run: pending push and observation.
-- Demo video: not supplied.
+- Public repository: https://github.com/rajeet-04/TinyColor
+- Unauthenticated `git ls-remote` returned branch `rajeet` at exact commit
+  `1c218b669d192e37b7019b08395cf348410dde79`.
+- Exact-commit CI: [GitHub Actions run 30686980719](https://github.com/rajeet-04/TinyColor/actions/runs/30686980719)
+  passed `make verify`, `deno test test.js`, `make build`, and artifact upload.
+- Demo video: not supplied and explicitly unclaimed.
 
-Phase 5 remains open until public clone access and the exact successful CI run
-are recorded. The missing video URL remains explicitly unclaimed.
+Phase 5 delivery evidence is verified. The demo recording remains the only
+human submission action.
