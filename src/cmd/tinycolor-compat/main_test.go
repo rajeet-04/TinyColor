@@ -118,6 +118,11 @@ func TestRunJSONLAndUsageErrors(t *testing.T) {
 			wantStdout: "{\"id\":\"string-format\",\"result\":\"hsl(0, 100%, 50%)\"}\n",
 		},
 		{
+			name:       "JSONL fromRatio forwards explicit format",
+			stdin:      "{\"id\":\"ratio-format\",\"operation\":\"fromRatio\",\"input\":{\"r\":1,\"g\":0,\"b\":0,\"a\":1},\"args\":{\"format\":\"hex\"}}\n",
+			wantStdout: "{\"id\":\"ratio-format\",\"result\":{\"alpha\":1,\"format\":\"hex\",\"original\":{\"a\":1,\"b\":\"0%\",\"g\":\"0%\",\"r\":\"100%\"},\"rgb\":{\"a\":1,\"b\":0,\"g\":0,\"r\":255},\"valid\":true,\"value\":\"#ff0000\"}}\n",
+		},
+		{
 			name:       "JSONL inspect preserves one-percent HSL channels",
 			stdin:      "{\"id\":\"hsl-one-percent\",\"operation\":\"inspect\",\"input\":\"hsl(115, 1%, 1%)\"}\n",
 			wantStdout: "{\"id\":\"hsl-one-percent\",\"result\":{\"alpha\":1,\"format\":\"hsl\",\"original\":\"hsl(115, 1%, 1%)\",\"rgb\":{\"a\":1,\"b\":3,\"g\":3,\"r\":3},\"valid\":true,\"value\":\"hsl(115, 1%, 1%)\"}}\n",
