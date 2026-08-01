@@ -102,6 +102,13 @@ func TestSaturateMatchesObjectConversionRounding(t *testing.T) {
 	}
 }
 
+func TestBrightenUsesRoundedRGBSnapshot(t *testing.T) {
+	color, _ := FromCompat("rgb(423.5294117647059%, 78.03921568627452%, -0.3921568627450981%)", false)
+	if got := color.Brighten(12.7).ToPercentageRGBString(); got != "rgb(67%, 91%, 13%)" {
+		t.Fatalf("Brighten(12.7) = %s", got)
+	}
+}
+
 func TestMix(t *testing.T) {
 	black, _ := FromCompat("#000", false)
 	white, _ := FromCompat("#fff", false)
