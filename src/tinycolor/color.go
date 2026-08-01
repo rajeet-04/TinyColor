@@ -85,8 +85,7 @@ func (c Color) ToRGBString() string {
 	return fmt.Sprintf("rgba(%d, %d, %d, %s)", x.R, x.G, x.B, roundedAlpha(x.A))
 }
 func (c Color) ToPercentageRGB() RGB {
-	x := c.ToRGB()
-	return RGB{percent(x.R), percent(x.G), percent(x.B), x.A}
+	return RGB{percent(c.model.R), percent(c.model.G), percent(c.model.B), c.model.A}
 }
 func (c Color) ToPercentageRGBString() string {
 	x := c.ToPercentageRGB()
@@ -238,12 +237,25 @@ func (c Color) IsDark() bool  { return c.Brightness() < 128 }
 func (c Color) IsLight() bool { return !c.IsDark() }
 func (c Color) Clone() Color  { n, _ := FromCompat(c.String(), false); return n }
 func Equals(a, b any) bool {
-	if a == nil || b == nil {
+	if !jsTruthy(a) || !jsTruthy(b) {
 		return false
 	}
 	x, _ := FromCompat(a, false)
 	y, _ := FromCompat(b, false)
 	return x.ToRGBString() == y.ToRGBString()
+}
+func jsTruthy(value any) bool {
+	switch value := value.(type) {
+	case nil:
+		return false
+	case bool:
+		return value
+	case string:
+		return value != ""
+	default:
+		number := color.ParseFloat(value)
+		return math.IsNaN(number) || number != 0
+	}
 }
 func Random() Color {
 	return Color{model: color.Model{R: rand.Float64() * 255, G: rand.Float64() * 255, B: rand.Float64() * 255, A: 1, Valid: true, Format: color.FormatRGB}}
@@ -302,7 +314,7 @@ func (c Color) Inspect() map[string]any {
 	return map[string]any{"valid": c.Valid(), "format": format, "alpha": c.Alpha(), "rgb": c.RGB(), "value": c.String(), "original": c.Original()}
 }
 
-func percent(channel int) int { return int(math.Round(float64(channel) / 255 * 100)) }
+func percent(channel float64) int { return mathRound(color.Bound01(channel, 255) * 100) }
 func roundedAlpha(alpha float64) string {
 	return strconv.FormatFloat(math.Round(alpha*100)/100, 'f', -1, 64)
 }
