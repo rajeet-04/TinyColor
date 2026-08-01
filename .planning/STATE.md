@@ -2,23 +2,35 @@
 
 **Updated:** 2026-08-01
 
-- Planning initialized from the local `bgrins/TinyColor` checkout.
-- JavaScript source and tests are the immutable oracle.
-- Node 24.18.0 and Go 1.26.1 are available locally.
-- `deno` is not installed; no original-source test pass is claimed.
-- Phase 1 completed in commit `78423e3`: Go/Node JSONL runners, protocol tests,
-  and a fixed corpus passed 9/9 with zero mismatches. This is not whole-library
-  parity.
-- Phase 2 completed locally: the normalized parser covers HEX, RGB(A), HSL(A),
-  HSV(A), names, objects, invalid input, and FromRatio. Differential evidence:
-  26/26 HEX/RGB/name cases, 23/23 complete parser cases, and 9/9 smoke cases.
-- The Go module lives in `src/`; `tests/original/manifest.sha256` pins the
-  unmodified root JavaScript oracle.
-- Phase 3 completed locally: conversion/representation and analysis behavior
-  passed a 35/35 exact corpus; all Phase 1–3 corpora are zero-mismatch. The
-  compatibility protocol now preserves successful JSON `false` results.
-- Phase 4 completed locally: modifiers, Mix, WCAG readability, and palette
-  operations passed the full gate. Exact differential evidence is 9/9 smoke,
-  26/26 HEX/RGB, 23/23 parser, 35/35 conversion, and 58/58 operations with
-  zero mismatches. `deno` remains unavailable, so no original-source suite
-  pass is claimed.
+## Current Position
+
+- Phase 5 of 5: Delivery Evidence
+- Plan 05-02, Task 3 of 3: shared-workload benchmark not started
+- Plans 1–4 are complete; Phase 5 Plan 05-01 and fuzz Tasks 05-02-01/02 are complete.
+
+## Verified Evidence
+
+- Immutable JavaScript oracle hashes: 3/3 verified.
+- Exact corpora: smoke 9/9, HEX/RGB 26/26, parser 23/23, conversion 35/35, operations 71/71.
+- Go tests and vet pass; Node adapter, verifier, harness, and log-validator tests pass.
+- Immutable Deno source suite: 45 passed, 0 failed, 1 ignored.
+- Differential fuzz evidence: 60.012 seconds, seed 20260801, 1,091,630 cases, zero divergences.
+
+## Recent Decisions
+
+- Use the pinned V8-derived 8-bit luminance transfer table for exact `Math.pow` parity.
+- Apply TinyColor's sub-one RGB rounding once at the `FromCompat` constructor boundary.
+- Keep fuzz inputs broad and comparisons exact; never replace divergences with tolerance.
+
+## Remaining
+
+- Implement honest same-host startup p99, latency p99, throughput, and peak RSS benchmarks.
+- Complete Plan 05-03 judge-facing documentation and final evidence refresh.
+- Verify the pushed GitHub Actions run and public clone workflow.
+- Human action: record and publish the five-minute demo video.
+
+## Session Continuity
+
+Last session: 2026-08-01T00:20:50.023Z
+Stopped at: Plan 05-02 Task 3, ready to implement benchmarks with TDD.
+Resume file: `.planning/phases/05-delivery-evidence/.continue-here.md`
