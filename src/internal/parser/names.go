@@ -2,6 +2,7 @@ package parser
 
 import (
 	"fmt"
+	"maps"
 	"strings"
 )
 
@@ -33,6 +34,8 @@ var (
 		return result
 	}()
 )
+
+func Names() map[string]string { return maps.Clone(names) }
 
 func NameForRGB(r, g, b int) string {
 	hex := fmt.Sprintf("%02x%02x%02x", r, g, b)
