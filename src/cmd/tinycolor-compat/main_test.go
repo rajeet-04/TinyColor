@@ -128,6 +128,23 @@ func TestRunJSONLAndUsageErrors(t *testing.T) {
 			wantStdout: "{\"id\":\"hsl-one-percent\",\"result\":{\"alpha\":1,\"format\":\"hsl\",\"original\":\"hsl(115, 1%, 1%)\",\"rgb\":{\"a\":1,\"b\":3,\"g\":3,\"r\":3},\"valid\":true,\"value\":\"hsl(115, 1%, 1%)\"}}\n",
 		},
 		{
+			name:       "one-request bridge",
+			args:       []string{"bridge", `{"id":"bridge-red","operation":"output","input":"red","args":{"method":"toHexString"}}`},
+			wantStdout: "{\"id\":\"bridge-red\",\"result\":\"#ff0000\"}\n",
+		},
+		{name: "missing bridge request", args: []string{"bridge"}, wantStatus: 2},
+		{
+			name:       "malformed bridge request",
+			args:       []string{"bridge", "{bad"},
+			wantStatus: 1,
+			verify: func(t *testing.T, output string) {
+				t.Helper()
+				if !strings.Contains(output, "malformed JSON") {
+					t.Fatalf("stdout = %q", output)
+				}
+			},
+		},
+		{
 			name:  "malformed JSONL request does not stop the stream",
 			stdin: "{bad json\n{\"id\":\"red\",\"operation\":\"inspect\",\"input\":\"red\"}\n",
 			verify: func(t *testing.T, output string) {

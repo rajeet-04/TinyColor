@@ -24,6 +24,19 @@ func run(args []string, stdin io.Reader, stdout, stderr io.Writer) int {
 		return runJSONL(stdin, stdout, stderr)
 	}
 	switch args[0] {
+	case "bridge":
+		if len(args) != 2 {
+			usage(stderr, "bridge <json-request>")
+			return 2
+		}
+		request, err := compat.Decode([]byte(args[1]))
+		if err != nil {
+			response, _ := compat.Failure("", err.Error())
+			write(response, stdout, stderr)
+			return 1
+		}
+		write(handle(request), stdout, stderr)
+		return 0
 	case "parse":
 		return runParse(args[1:], stdout, stderr)
 	case "convert":
