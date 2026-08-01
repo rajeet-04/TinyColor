@@ -1,0 +1,11 @@
+mod.js text eol=crlf
+test.js text eol=crlf
+tinycolor.js text eol=crlf
+
+# Keep upstream oracle and published JavaScript copies in the repository for
+# differential testing, but exclude them from the implementation language chart.
+mod.js linguist-vendored
+test.js linguist-vendored
+tinycolor.js linguist-vendored
+npm/** linguist-vendored
+dist/** linguist-generated

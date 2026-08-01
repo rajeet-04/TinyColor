@@ -12,9 +12,12 @@ compatibility project: observable TinyColor behavior is the specification.
 - `mod.js`, `tinycolor.js`, `test.js`, `npm/`, `dist/`, and `demo/` are the
   immutable JavaScript oracle. Do not edit them except for a separately agreed
   upstream maintenance change.
-- New Go work belongs under `go/`; `go/go.mod` is the port module boundary.
+- New Go work belongs under `src/`; `src/go.mod` is the port module boundary.
 - Oracle adapters, generated fixtures, and mismatch reports belong under
   `compat/`. Do not rewrite the original test suite to make it pass.
+- `tests/original/manifest.sha256` pins the immutable root oracle. Port-owned
+  adapter tests live in `tests/port/`; differential fuzzing and benchmarks live
+  in `fuzz/` and `bench/` respectively.
 - Human-facing project docs belong in `docs/`; compatibility status belongs in
   `COMPATIBILITY.md`.
 
@@ -70,9 +73,9 @@ Known differences (or none):
 
 | Owner | Primary boundary | Cannot merge without |
 |---|---|---|
-| A — Parsing/model | `go/internal/color`, `go/internal/parser` | parser differential cases |
-| B — Conversion/API | `go/tinycolor`, formatting/readability/palettes | deterministic parity tests |
-| C — Compatibility/quality | `compat`, `go/testdata`, `COMPATIBILITY.md` | reproducible report |
+| A — Parsing/model | `src/internal/color`, `src/internal/parser` | parser differential cases |
+| B — Conversion/API | `src/tinycolor`, formatting/readability/palettes | deterministic parity tests |
+| C — Compatibility/quality | `compat`, `src/testdata`, `COMPATIBILITY.md` | reproducible report |
 | D — Delivery | CLI, CI, benchmarks, docs | clean-checkout commands |
 
 Coordinate through exported contracts, never by editing another owner’s files
@@ -84,10 +87,10 @@ of the implicated module fixes it.
 Run the narrowest applicable check while developing, then run the phase gate:
 
 ```powershell
-go test ./...                         # from go/
+go test ./...                         # from src/
 node compat/js-runner.mjs < cases.json # from repository root
-go test -run TestDifferential ./...    # from go/
-go vet ./...                           # from go/
+go test -run TestDifferential ./...    # from src/
+go vet ./...                           # from src/
 gofmt -w <changed-go-files>
 ```
 
@@ -100,4 +103,3 @@ passing test result.
 A feature is done only when its source behavior is mapped, Go unit tests pass,
 the matching oracle cases pass, the compatibility matrix is updated, and any
 remaining mismatch is named with input, JavaScript result, Go result, and owner.
-
