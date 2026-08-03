@@ -26,6 +26,21 @@ docker build -t tinycolor-go .
 docker run --rm tinycolor-go parse --json red
 ```
 
+## Try it in GitHub Codespaces
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/rajeet-04/TinyColor?ref=rajeet&quickstart=1)
+
+The Codespaces environment installs Go, Node.js, Deno, and GNU Make, then
+builds the native CLI. In the terminal, run:
+
+```sh
+./bin/tinycolor parse --json red
+./bin/tinycolor convert --to hsl --json red
+./bin/tinycolor palette --type triad --json red
+```
+
+The browser launch link opens the `rajeet` branch used for this submission.
+
 ## CLI
 
 ```sh
